@@ -1,0 +1,210 @@
+---
+import MainLayout from '@/layouts/main-layout.astro'
+import { Button } from '@/components/ui/button'
+import {
+  Card,
+  CardContent,
+  CardDescription,
+  CardFooter,
+  CardHeader,
+  CardTitle,
+} from '@/components/ui/card'
+import { Input } from '@/components/ui/input'
+import { Label } from '@/components/ui/label'
+import {
+  Alert,
+  AlertDescription,
+} from '@/components/ui/alert'
+
+// Check if user is already logged in
+if (Astro.locals.session) {
+  return Astro.redirect('/app')
+}
+---
+
+<MainLayout title="Create a SpotSpot Account">
+  <div
+    class="flex min-h-[calc(100vh-theme(spacing.16))] items-center justify-center py-10"
+  >
+    <Card className="w-full max-w-md">
+      <CardHeader className="space-y-1">
+        <CardTitle
+          className="text-2xl font-bold tracking-tight"
+          >Create your account</CardTitle
+        >
+        <CardDescription>
+          Enter your details to register for SpotSpot
+        </CardDescription>
+      </CardHeader>
+      <CardContent>
+        <div
+          id="error-container"
+          class="mb-4 hidden"
+        >
+          <Alert variant="destructive">
+            <AlertDescription id="error-message" />
+          </Alert>
+        </div>
+
+        <div class="space-y-4">
+          <div class="space-y-2">
+            <Label htmlFor="name">Full Name</Label>
+            <Input
+              id="name"
+              type="text"
+              placeholder="John Doe"
+              required
+              autoComplete="name"
+            />
+          </div>
+
+          <div class="space-y-2">
+            <Label htmlFor="email">Email</Label>
+            <Input
+              id="email"
+              type="email"
+              placeholder="your.email@example.com"
+              required
+              autoComplete="email"
+            />
+          </div>
+
+          <div class="space-y-2">
+            <Label htmlFor="password">Password</Label>
+            <Input
+              id="password"
+              type="password"
+              required
+              autoComplete="new-password"
+              placeholder="8+ characters"
+            />
+          </div>
+
+          <Button
+            type="button"
+            id="register-button"
+            className="w-full"
+          >
+            Create Account
+          </Button>
+        </div>
+      </CardContent>
+      <CardFooter>
+        <div class="w-full text-center text-sm">
+          Already have an account?{' '}
+          <a
+            href="/login"
+            class="text-primary hover:underline"
+          >
+            Sign in
+          </a>
+        </div>
+      </CardFooter>
+    </Card>
+  </div>
+</MainLayout>
+
+<script>
+  import { authClient } from '@/lib/auth/client-astro'
+
+  // Get DOM elements
+  const registerButton = document.getElementById(
+    'register-button',
+  )
+  const nameInput = document.getElementById(
+    'name',
+  ) as HTMLInputElement
+  const emailInput = document.getElementById(
+    'email',
+  ) as HTMLInputElement
+  const passwordInput = document.getElementById(
+    'password',
+  ) as HTMLInputElement
+  const errorContainer = document.getElementById(
+    'error-container',
+  )
+  const errorMessage =
+    document.getElementById('error-message')
+
+  // Handle registration submission
+  registerButton?.addEventListener('click', async () => {
+    // Hide any previous errors
+    errorContainer?.classList.add('hidden')
+
+    // Basic validation
+    if (
+      !nameInput.value ||
+      !emailInput.value ||
+      !passwordInput.value
+    ) {
+      showError('Please fill in all fields')
+      return
+    }
+
+    // Password validation
+    if (passwordInput.value.length < 8) {
+      showError('Password must be at least 8 characters')
+      return
+    }
+
+    try {
+      // Disable button during registration attempt
+      if (registerButton) {
+        registerButton.setAttribute('disabled', 'true')
+        registerButton.textContent = 'Creating account...'
+      }
+
+      // Attempt to register
+      await authClient.signUp.email({
+        name: nameInput.value,
+        email: emailInput.value,
+        password: passwordInput.value,
+        callbackURL: '/app',
+      })
+
+      // If signUp returns (doesn't redirect), it means there was an error
+      showError('There was a problem creating your account')
+    } catch (error) {
+      // Handle specific errors
+      console.error('Registration error:', error)
+
+      // Check for common error types
+      if (error instanceof Error) {
+        if (
+          error.message.includes('email') &&
+          error.message.includes('exists')
+        ) {
+          showError(
+            'This email is already registered. Please log in instead.',
+          )
+          return
+        }
+      }
+
+      showError(
+        'An error occurred during registration. Please try again.',
+      )
+    } finally {
+      // Re-enable button
+      if (registerButton) {
+        registerButton.removeAttribute('disabled')
+        registerButton.textContent = 'Create Account'
+      }
+    }
+  })
+
+  // Function to display error messages
+  function showError(message: string) {
+    if (errorMessage && errorContainer) {
+      errorMessage.textContent = message
+      errorContainer.classList.remove('hidden')
+    }
+  }
+
+  // Add enter key support
+  passwordInput?.addEventListener('keydown', (e) => {
+    if (e.key === 'Enter') {
+      registerButton?.click()
+    }
+  })
+</script>
