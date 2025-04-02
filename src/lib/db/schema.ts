@@ -2,8 +2,34 @@ import {
   sqliteTable,
   text,
   integer,
+  type AnySQLiteColumn,
 } from 'drizzle-orm/sqlite-core'
 
+// Core tables
+export const list = sqliteTable('list', {
+  id: integer('id').primaryKey(),
+  name: text('name').notNull(),
+  parentId: integer('parent_id').references(
+    (): AnySQLiteColumn => list.id,
+  ),
+  userId: text('user_id')
+    .notNull()
+    .references(() => user.id, { onDelete: 'cascade' }),
+})
+
+export const spot = sqliteTable('spot', {
+  id: integer('id').primaryKey(),
+  name: text('name').notNull(),
+  visited: integer({ mode: 'boolean' }),
+  rating: integer('rating'),
+  notes: text('notes'),
+  link: text('link'),
+  listId: integer('listId').references(() => list.id, {
+    onDelete: 'cascade',
+  }),
+})
+
+// Auth Tables
 export const user = sqliteTable('user', {
   id: text('id').primaryKey(),
   name: text('name').notNull(),
