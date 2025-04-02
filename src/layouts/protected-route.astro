@@ -1,0 +1,11 @@
+---
+interface Props {
+  redirectTo?: string
+}
+const { redirectTo } = Astro.props
+
+// If we don't have an authenticated session, redirect them to either the login page or wherever this route is set to take them to
+if (!Astro.locals.session) {
+  return Astro.redirect(redirectTo ?? '/login')
+}
+---
