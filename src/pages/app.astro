@@ -1,12 +1,12 @@
 ---
 import MainLayout from '@/layouts/main-layout.astro'
-import ProtectedRoute from '@/layouts/protected-route.astro'
-
 import SpotSpot from '@/components/app/app'
+
+if (!Astro.locals.session) {
+  return Astro.redirect('/login')
+}
 ---
 
-<ProtectedRoute>
-  <MainLayout title="SpotSpot App">
-    <SpotSpot client:load />
-  </MainLayout>
-</ProtectedRoute>
+<MainLayout title="SpotSpot App">
+  <SpotSpot client:load />
+</MainLayout>
