@@ -15,15 +15,10 @@ export default function Header() {
       ) : null}
       <Button
         className="absolute top-4 right-4 bg-red-500 hover:bg-red-600"
-        onClick={() =>
-          authClient.signOut({
-            fetchOptions: {
-              onSuccess: () => {
-                window.location.assign('/')
-              },
-            },
-          })
-        }
+        onClick={() => {
+          authClient.signOut()
+          window.location.assign('/')
+        }}
       >
         Sign Out
       </Button>
