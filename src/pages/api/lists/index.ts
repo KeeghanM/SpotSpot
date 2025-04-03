@@ -1,10 +1,8 @@
 import { auth } from '@/lib/auth/auth'
 import { db } from '@/lib/db/db'
-import { list } from '@/lib/db/schema'
+import { list, spot } from '@/lib/db/schema'
 import type { APIRoute } from 'astro'
-import { and, eq } from 'drizzle-orm'
-
-type List = typeof list.$inferSelect
+import { and, eq, inArray } from 'drizzle-orm'
 
 export const GET: APIRoute = async ({ request }) => {
   try {
@@ -20,7 +18,25 @@ export const GET: APIRoute = async ({ request }) => {
       .from(list)
       .where(eq(list.userId, session.user.id))
 
-    return new Response(JSON.stringify(lists))
+    const spots = await db
+      .select()
+      .from(spot)
+      .where(
+        inArray(
+          spot.listId,
+          lists.map((l) => l.id),
+        ),
+      )
+
+    const listsWithSpots = lists.map((l) => {
+      const spotsForList = spots.filter(
+        (s) => s.listId === l.id,
+      )
+
+      return { ...l, spots: spotsForList }
+    })
+
+    return new Response(JSON.stringify(listsWithSpots))
   } catch (error) {
     const msg =
       error instanceof Error

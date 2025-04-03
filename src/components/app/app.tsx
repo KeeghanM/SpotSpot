@@ -4,7 +4,7 @@ import {
 } from '@tanstack/react-query'
 import { useListsQueries } from './hooks/useListsQueries'
 import Header from './components/header'
-import Viewer from './components/viewer/viewer'
+import Viewer from './components/viewer'
 import Controls from './components/controls'
 
 const queryClient = new QueryClient()

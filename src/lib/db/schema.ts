@@ -24,9 +24,9 @@ export const spot = sqliteTable('spot', {
   rating: integer('rating'),
   notes: text('notes'),
   link: text('link'),
-  listId: integer('listId').references(() => list.id, {
-    onDelete: 'cascade',
-  }),
+  listId: integer('listId')
+    .notNull()
+    .references(() => list.id, { onDelete: 'cascade' }),
 })
 
 // Auth Tables
