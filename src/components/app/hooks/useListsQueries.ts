@@ -56,7 +56,7 @@ export function useListsQueries() {
     }) => {
       const response = await fetch('/api/lists', {
         method: 'POST',
-        body: JSON.stringify(newList),
+        body: JSON.stringify({ newList }),
         headers: { 'Content-Type': 'application/json' },
       })
       return response.json() as Promise<List>

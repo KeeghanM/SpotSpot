@@ -32,20 +32,11 @@ if (Astro.locals.session) {
           className="text-2xl font-bold tracking-tight"
           >Login to SpotSpot</CardTitle
         >
-        <CardDescription>
+        <CardDescription className="text-foreground">
           Enter your credentials to access your account
         </CardDescription>
       </CardHeader>
       <CardContent>
-        <div
-          id="error-container"
-          class="mb-4 hidden"
-        >
-          <Alert variant="destructive">
-            <AlertDescription id="error-message" />
-          </Alert>
-        </div>
-
         <div class="space-y-4">
           <div class="space-y-2">
             <Label htmlFor="email">Email</Label>
@@ -83,6 +74,16 @@ if (Astro.locals.session) {
           >
             Log in
           </Button>
+          <div
+            id="error-container"
+            class="mb-4 hidden"
+          >
+            <p
+              id="error-message"
+              class="text-red-500"
+            >
+            </p>
+          </div>
         </div>
       </CardContent>
       <CardFooter>

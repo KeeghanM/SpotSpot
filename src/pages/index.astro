@@ -15,22 +15,18 @@ import { Button } from '@/components/ui/button'
         >
           Track, rate, and discover your favorite spots
         </h1>
-        <p
-          class="text-muted-foreground mt-4 text-xl md:text-2xl"
-        >
+        <p class="text-foreground mt-4 text-xl md:text-2xl">
           Your personal logbook for all the places you want
           to visit and have experienced.
         </p>
         <div class="mt-8 flex flex-col gap-4 sm:flex-row">
           <Button
-            asChild
             size="lg"
             className="font-medium"
           >
             <a href="/register">Create your account</a>
           </Button>
           <Button
-            asChild
             variant="outline"
             size="lg"
             className="font-medium"
@@ -39,7 +35,7 @@ import { Button } from '@/components/ui/button'
           </Button>
         </div>
       </div>
-      <div class="w-full max-w-md md:w-[45%]">
+      <div class="w-32 max-w-md md:w-[45%]">
         <div
           class="from-primary/80 to-primary flex aspect-square items-center justify-center rounded-lg bg-gradient-to-br shadow-xl"
         >
@@ -101,7 +97,7 @@ import { Button } from '@/components/ui/button'
           <h3 class="text-xl font-semibold">
             Add Your Spots
           </h3>
-          <p class="text-muted-foreground mt-2">
+          <p class="text-foreground mt-2">
             Create personalized lists of places you've been
             to or want to visit. Add restaurants, cafés,
             tourist attractions, parks, anything you want!
@@ -134,7 +130,7 @@ import { Button } from '@/components/ui/button'
           <h3 class="text-xl font-semibold">
             Organize & Tag
           </h3>
-          <p class="text-muted-foreground mt-2">
+          <p class="text-foreground mt-2">
             Categorize your spots with custom tags and
             filter them based on location, type, or personal
             preferences. Keep everything organized in one
@@ -170,7 +166,7 @@ import { Button } from '@/components/ui/button'
           <h3 class="text-xl font-semibold">
             Rate & Discover
           </h3>
-          <p class="text-muted-foreground mt-2">
+          <p class="text-foreground mt-2">
             Rate places you've visited and discover new
             recommendations based on your preferences. Share
             your favorites with friends.
@@ -181,20 +177,19 @@ import { Button } from '@/components/ui/button'
 
     <!-- Call to Action -->
     <section
-      class="bg-muted mt-16 rounded-xl p-8 text-center md:mt-24 md:p-12"
+      class="bg-accent mt-16 rounded-xl p-8 text-center md:mt-24 md:p-12"
     >
       <h2 class="text-3xl font-bold md:text-4xl">
         Ready to start tracking?
       </h2>
       <p
-        class="text-muted-foreground mx-auto mt-4 max-w-2xl text-lg"
+        class="text-foreground mx-auto mt-4 max-w-2xl text-lg"
       >
         Join SpotSpot today and never lose track of your
         favorite places again. Create your personalized map
         of memories and discoveries.
       </p>
       <Button
-        asChild
         size="lg"
         className="mt-8 font-medium"
       >

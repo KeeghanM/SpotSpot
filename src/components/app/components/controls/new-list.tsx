@@ -51,7 +51,7 @@ export default function NewList() {
         >
           <DialogHeader>
             <DialogTitle>New List</DialogTitle>
-            <DialogDescription>
+            <DialogDescription className="text-foreground">
               Create a new list of Spots. Click create when
               you're ready.
             </DialogDescription>
@@ -80,7 +80,7 @@ export default function NewList() {
               <Button
                 disabled={createListMutation.isPending}
                 type="button"
-                variant="secondary"
+                variant="outline"
               >
                 Close
               </Button>
