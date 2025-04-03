@@ -29,7 +29,15 @@ export default function Spot({ spot }: SpotProps) {
   const { updateSpotMutation } = useListsQueries()
   const [open, setOpen] = useState(false)
   const [name, setName] = useState(spot.name)
-  const [location, setLocation] = useState(spot.link ?? '')
+  const [locationName, setLocationName] = useState(
+    spot.locationName ?? '',
+  )
+  const [locationAddress, setLocationAddress] = useState(
+    spot.locationAddress ?? '',
+  )
+  const [locationLink, setLocationLink] = useState(
+    spot.locationLink ?? '',
+  )
   const [visited, setVisited] = useState(
     spot.visited ?? false,
   )
@@ -85,7 +93,9 @@ export default function Spot({ spot }: SpotProps) {
             updateSpotMutation.mutate({
               id: spot.id,
               name: name,
-              link: location,
+              locationName: locationName,
+              locationAddress: locationAddress,
+              locationLink: locationLink,
               visited: visited,
               rating: rating,
               listId: spot.listId,
@@ -122,8 +132,16 @@ export default function Spot({ spot }: SpotProps) {
                 Location
               </Label>
               <Location
-                location={location}
-                setLocation={setLocation}
+                location={{
+                  name: locationName,
+                  address: locationAddress,
+                  link: locationLink,
+                }}
+                setLocation={(name, address, link) => {
+                  setLocationName(name)
+                  setLocationAddress(address)
+                  setLocationLink(link)
+                }}
                 className="col-span-3"
               />
             </div>

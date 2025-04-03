@@ -23,7 +23,9 @@ export const spot = sqliteTable('spot', {
   visited: integer({ mode: 'boolean' }),
   rating: integer('rating'),
   notes: text('notes'),
-  link: text('link'),
+  locationName: text('location_name'),
+  locationAddress: text('location_address'),
+  locationLink: text('location_link'),
   listId: integer('listId')
     .notNull()
     .references(() => list.id, { onDelete: 'cascade' }),

@@ -2,7 +2,6 @@ import {
   useListsStore,
   type ListWithSpots,
 } from '../../stores/lists'
-
 import Spot from './spot'
 
 interface ListProps {

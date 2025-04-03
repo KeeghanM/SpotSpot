@@ -4,8 +4,12 @@ import { Input } from '@/components/ui/input'
 import { useEffect, useRef, useState } from 'react'
 
 interface LocationProps {
-  location: string
-  setLocation: (location: string) => void
+  location: { name: string; address: string; link: string }
+  setLocation: (
+    name: string,
+    address: string,
+    link: string,
+  ) => void
   className?: string
 }
 export default function Location({
@@ -18,10 +22,24 @@ export default function Location({
   const inputRef = useRef<HTMLInputElement>(null)
   const places = useMapsLibrary('places')
 
+  const addressToURL = (address: string) => {
+    if (!address) return ''
+    const url = new URL(
+      'https://www.google.com/maps/search/?api=1',
+    )
+    url.searchParams.set('query', address)
+    return url.href
+  }
+
   useEffect(() => {
     if (!places || !inputRef.current) return
     const options = {
-      fields: ['geometry', 'name', 'formatted_address'],
+      fields: [
+        'geometry',
+        'name',
+        'formatted_address',
+        'url',
+      ],
     }
     setPlaceAutocomplete(
       new places.Autocomplete(inputRef.current, options),
@@ -33,7 +51,13 @@ export default function Location({
     placeAutocomplete.addListener('place_changed', () => {
       const place = placeAutocomplete.getPlace()
       if (!place) return
-      setLocation(place.name ?? '')
+
+      setLocation(
+        place.name ?? '',
+        place.formatted_address ?? '',
+        place.url ??
+          addressToURL(place.formatted_address ?? ''),
+      )
     })
   }, [placeAutocomplete])
 
@@ -43,10 +67,7 @@ export default function Location({
       className={className}
       type="text"
       placeholder="Search for a place..."
-      value={location}
-      onChange={(e) => {
-        setLocation(e.target.value)
-      }}
+      defaultValue={location.name}
     />
   )
 }

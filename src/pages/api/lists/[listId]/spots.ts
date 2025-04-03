@@ -75,8 +75,6 @@ export const PUT: APIRoute = async ({
       spotToUpdate: Spot
     }
 
-    console.log('spotToUpdate', spotToUpdate)
-
     if (
       !spotToUpdate ||
       spotToUpdate.listId !== +params.listId

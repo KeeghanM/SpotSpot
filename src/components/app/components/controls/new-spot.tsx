@@ -21,7 +21,9 @@ export default function NewList() {
   const { currentList } = useListsStore()
   const [open, setOpen] = useState(false)
   const [name, setName] = useState('')
-  const [location, setLocation] = useState('')
+  const [locationName, setLocationName] = useState('')
+  const [locationAddress, setLocationAddress] = useState('')
+  const [locationLink, setLocationLink] = useState('')
 
   useEffect(() => {
     if (!createSpotMutation.isSuccess) return
@@ -31,7 +33,9 @@ export default function NewList() {
 
   useEffect(() => {
     setName('')
-    setLocation('')
+    setLocationName('')
+    setLocationAddress('')
+    setLocationLink('')
   }, [open])
 
   return (
@@ -54,8 +58,13 @@ export default function NewList() {
             e.preventDefault()
             createSpotMutation.mutate({
               name: name,
-              link: location,
+              locationName: locationName,
+              locationAddress: locationAddress,
+              locationLink: locationLink,
               listId: currentList!.id,
+              notes: '',
+              rating: 0,
+              visited: false,
             })
           }}
         >
@@ -92,8 +101,16 @@ export default function NewList() {
                 Location
               </Label>
               <Location
-                location={location}
-                setLocation={setLocation}
+                location={{
+                  name: locationName,
+                  address: locationAddress,
+                  link: locationLink,
+                }}
+                setLocation={(name, address, link) => {
+                  setLocationName(name)
+                  setLocationAddress(address)
+                  setLocationLink(link)
+                }}
                 className="col-span-3"
               />
             </div>

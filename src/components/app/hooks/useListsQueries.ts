@@ -68,11 +68,7 @@ export function useListsQueries() {
   })
 
   const createSpotMutation = useMutation({
-    mutationFn: async (newSpot: {
-      name: string
-      link: string
-      listId: number
-    }) => {
+    mutationFn: async (newSpot: Omit<Spot, 'id'>) => {
       const response = await fetch(
         `/api/lists/${newSpot.listId}/spots`,
         {
