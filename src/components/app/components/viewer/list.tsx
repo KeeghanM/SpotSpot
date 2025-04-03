@@ -12,7 +12,7 @@ export default function List({ list }: ListProps) {
   const { currentList, selectList } = useListsStore()
 
   return (
-    <div className="mx-auto w-lg max-w-lg">
+    <div className="mx-auto w-lg max-w-full">
       <div
         className={`cursor-pointer rounded border p-4 hover:bg-blue-100 ${currentList?.id === list.id ? 'bg-blue-100' : ''}`}
         onClick={() => {
