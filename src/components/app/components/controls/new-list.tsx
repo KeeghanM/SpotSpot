@@ -37,7 +37,7 @@ export default function NewList() {
       onOpenChange={setOpen}
     >
       <DialogTrigger asChild>
-        <Button variant="outline">New List</Button>
+        <Button className="flex-1">New List</Button>
       </DialogTrigger>
       <DialogContent className="sm:max-w-[425px]">
         <form

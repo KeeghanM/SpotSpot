@@ -52,7 +52,7 @@ export default function List({ list }: ListProps) {
         ) : (
           <div className="grid h-full w-full items-center">
             <p className="mx-auto w-fit text-xl">
-              No spots found, add your first one below.
+              No spots found, add your first one now.
             </p>
           </div>
         ))}

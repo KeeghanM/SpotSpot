@@ -23,8 +23,8 @@ function AppContent() {
   return (
     <div className="flex h-screen flex-col">
       <Header />
-      <Viewer />
       <Controls />
+      <Viewer />
     </div>
   )
 }

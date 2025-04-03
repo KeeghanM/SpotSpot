@@ -41,7 +41,8 @@ export default function NewList() {
       <DialogTrigger asChild>
         <Button
           disabled={!currentList}
-          variant="outline"
+          variant="accent"
+          className="flex-1"
         >
           New Spot
         </Button>
