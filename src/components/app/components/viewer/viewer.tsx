@@ -5,8 +5,8 @@ export default function Viewer() {
   const { lists } = useListsStore()
 
   return (
-    <div className="mx-auto w-full max-w-[calc(100vw-2rem)] flex-1">
-      <div className="mt-4 flex w-full flex-col gap-2 overflow-y-auto">
+    <div className="mx-auto max-h-screen w-full max-w-full flex-1 overflow-y-auto">
+      <div className="flex w-full flex-col gap-2 p-4">
         {lists.map((list) => (
           <List
             list={list}
