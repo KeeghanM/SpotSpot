@@ -8,7 +8,7 @@ import {
   DialogTrigger,
 } from '@/components/ui/dialog'
 
-import type { Spot } from '../../stores/lists'
+import type { Spot } from '../../../stores/lists'
 import {
   IoCheckmarkDoneCircle,
   IoStarOutline,
@@ -18,8 +18,9 @@ import { useEffect, useState } from 'react'
 import { Label } from '@/components/ui/label'
 import { Input } from '@/components/ui/input'
 import { Button } from '@/components/ui/button'
-import { useListsQueries } from '../../hooks/useListsQueries'
+import { useListsQueries } from '../../../hooks/useListsQueries'
 import { Textarea } from '@/components/ui/textarea'
+import Location from './location'
 interface SpotProps {
   spot: Spot
 }
@@ -105,7 +106,7 @@ export default function Spot({ spot }: SpotProps) {
               </Label>
               <Input
                 id="name"
-                placeholder="Restaurants"
+                placeholder="Restaurant, Park, etc."
                 value={name}
                 onChange={(e) => {
                   setName(e.target.value)
@@ -120,13 +121,9 @@ export default function Spot({ spot }: SpotProps) {
               >
                 Location
               </Label>
-              <Input
-                id="location"
-                placeholder="Start typing..."
-                value={location}
-                onChange={(e) => {
-                  setLocation(e.target.value)
-                }}
+              <Location
+                location={location}
+                setLocation={setLocation}
                 className="col-span-3"
               />
             </div>

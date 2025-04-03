@@ -14,6 +14,7 @@ import { DialogClose } from '@radix-ui/react-dialog'
 import { useEffect, useState } from 'react'
 import { useListsQueries } from '../../hooks/useListsQueries'
 import { useListsStore } from '../../stores/lists'
+import Location from '../viewer/spot/location'
 
 export default function NewList() {
   const { createSpotMutation } = useListsQueries()
@@ -90,13 +91,9 @@ export default function NewList() {
               >
                 Location
               </Label>
-              <Input
-                id="location"
-                placeholder="Start typing..."
-                value={location}
-                onChange={(e) => {
-                  setLocation(e.target.value)
-                }}
+              <Location
+                location={location}
+                setLocation={setLocation}
                 className="col-span-3"
               />
             </div>

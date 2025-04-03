@@ -6,6 +6,7 @@ import { useListsQueries } from './hooks/useListsQueries'
 import Header from './components/header'
 import Viewer from './components/viewer'
 import Controls from './components/controls'
+import { APIProvider } from '@vis.gl/react-google-maps'
 
 const queryClient = new QueryClient()
 
@@ -31,8 +32,12 @@ function AppContent() {
 
 export default function SpotSpot() {
   return (
-    <QueryClientProvider client={queryClient}>
-      <AppContent />
-    </QueryClientProvider>
+    <APIProvider
+      apiKey={import.meta.env.PUBLIC_GOOGLE_PLACES_API_KEY}
+    >
+      <QueryClientProvider client={queryClient}>
+        <AppContent />
+      </QueryClientProvider>
+    </APIProvider>
   )
 }

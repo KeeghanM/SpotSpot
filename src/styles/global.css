@@ -118,3 +118,10 @@ h5 {
 html {
   font-size: 100%;
 } /* 16px */
+
+.pac-container {
+  z-index: 1000;
+}
+.pac-item {
+  z-index: 1001;
+}
