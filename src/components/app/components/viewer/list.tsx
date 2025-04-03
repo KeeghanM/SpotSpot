@@ -14,8 +14,12 @@ export default function List({ list }: ListProps) {
   return (
     <div>
       <div
-        className={`cursor-pointer rounded border p-4 ${currentList?.id === list.id ? 'bg-blue-100' : ''}`}
-        onClick={() => selectList(list)}
+        className={`cursor-pointer rounded border p-4 hover:bg-blue-100 ${currentList?.id === list.id ? 'bg-blue-100' : ''}`}
+        onClick={() => {
+          selectList(
+            currentList?.id === list.id ? null : list,
+          )
+        }}
       >
         <h2 className="text-xl font-bold">{list.name}</h2>
         <p>

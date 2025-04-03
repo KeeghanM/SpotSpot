@@ -8,7 +8,7 @@ interface ListsState {
   lists: ListWithSpots[]
   currentList: ListWithSpots | null
   currentSpot: Spot | null
-  selectList: (list: ListWithSpots) => void
+  selectList: (list: ListWithSpots | null) => void
   selectSpot: (spot: Spot) => void
   deselectList: () => void
   deselectSpot: () => void

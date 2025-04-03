@@ -159,11 +159,17 @@ if (Astro.locals.session) {
         name: nameInput.value,
         email: emailInput.value,
         password: passwordInput.value,
-        callbackURL: '/app',
+        fetchOptions: {
+          onSuccess: () => {
+            window.location.href = '/app'
+          },
+          onError: () => {
+            showError(
+              'There was a problem creating your account',
+            )
+          },
+        },
       })
-
-      // If signUp returns (doesn't redirect), it means there was an error
-      showError('There was a problem creating your account')
     } catch (error) {
       // Handle specific errors
       console.error('Registration error:', error)

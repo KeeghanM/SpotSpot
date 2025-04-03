@@ -141,11 +141,15 @@ if (Astro.locals.session) {
       await authClient.signIn.email({
         email: emailInput.value,
         password: passwordInput.value,
-        callbackURL: '/app',
+        fetchOptions: {
+          onSuccess: () => {
+            window.location.href = '/app'
+          },
+          onError: () => {
+            showError('Invalid email or password')
+          },
+        },
       })
-
-      // If signIn returns (doesn't redirect), it means there was an error
-      showError('Invalid email or password')
     } catch (error) {
       // Handle any errors
       console.error('Login error:', error)
