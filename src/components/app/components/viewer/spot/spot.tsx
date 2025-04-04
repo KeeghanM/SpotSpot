@@ -90,7 +90,7 @@ export default function Spot({ spot }: SpotProps) {
             <p>{spot.name}</p>
             {spot.visited && <IoCheckmarkDoneCircle />}
           </div>
-          {spot.rating && (
+          {spot.rating && spot.rating > 0 ? (
             <div className="flex items-center gap-1">
               {[1, 2, 3, 4, 5].map((star) => (
                 <div
@@ -105,7 +105,7 @@ export default function Spot({ spot }: SpotProps) {
                 </div>
               ))}
             </div>
-          )}
+          ) : null}
           {spot.locationLink && (
             <a
               href={spot.locationLink}
