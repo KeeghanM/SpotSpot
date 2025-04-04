@@ -136,3 +136,63 @@ export const DELETE: APIRoute = async ({ request }) => {
     return new Response(msg, { status: 500 })
   }
 }
+
+export const PUT: APIRoute = async ({ request }) => {
+  try {
+    const session = await auth.api.getSession({
+      headers: request.headers,
+    })
+
+    if (!session)
+      return new Response('Unauthorized', { status: 401 })
+
+    const { listToUpdate } = (await request.json()) as {
+      listToUpdate: {
+        id: number
+        name: string
+        parentId: number | null
+      }
+    }
+
+    if (!listToUpdate)
+      return new Response('Missing list', { status: 400 })
+
+    // Check we have permissions to update this list
+    const validList = await db
+      .select()
+      .from(list)
+      .where(
+        and(
+          eq(list.userId, session.user.id),
+          eq(list.id, listToUpdate.id),
+        ),
+      )
+    if (validList.length === 0)
+      return new Response('Unauthorized', { status: 401 })
+
+    const updatedList = await db
+      .update(list)
+      .set({
+        name: listToUpdate.name,
+        parentId: listToUpdate.parentId,
+      })
+      .where(
+        and(
+          eq(list.userId, session.user.id),
+          eq(list.id, listToUpdate.id),
+        ),
+      )
+      .returning()
+
+    if (!updatedList[0]) throw new Error('Failed to update')
+
+    // Return the updated list back, so that it can be updated in client state
+    return new Response(JSON.stringify(listToUpdate))
+  } catch (error) {
+    const msg =
+      error instanceof Error
+        ? error.message
+        : 'An error occurred'
+    return new Response(msg, { status: 500 })
+  }
+}

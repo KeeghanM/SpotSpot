@@ -16,8 +16,14 @@ const fetchLists = async (): Promise<ListWithSpots[]> => {
 }
 export function useListsQueries() {
   const queryClient = useQueryClient()
-  const { addList, removeList, addSpot, updateSpot } =
-    useListsStore()
+  const {
+    addList,
+    removeList,
+    addSpot,
+    updateSpot,
+    removeSpot,
+    updateList,
+  } = useListsStore()
 
   // Fetch the data
   const listsQuery = useQuery({
@@ -51,6 +57,23 @@ export function useListsQueries() {
       queryClient.invalidateQueries({ queryKey: ['lists'] })
     },
   })
+
+  const updateListMutation = useMutation({
+    mutationFn: async (list: ListWithSpots) => {
+      const response = await fetch('/api/lists', {
+        method: 'PUT',
+        body: JSON.stringify({ listToUpdate: list }),
+        headers: { 'Content-Type': 'application/json' },
+      })
+      return response.json() as Promise<ListWithSpots>
+    },
+    onSuccess: (list) => {
+      // Add it "eagerly" before the re-fetch comes into effect
+      updateList(list)
+      queryClient.invalidateQueries({ queryKey: ['lists'] })
+    },
+  })
+
   const deleteListMutation = useMutation({
     mutationFn: async (id: number) => {
       const response = await fetch('/api/lists', {
@@ -106,11 +129,32 @@ export function useListsQueries() {
     },
   })
 
+  const deleteSpotMutation = useMutation({
+    mutationFn: async (spot: Spot) => {
+      const response = await fetch(
+        `/api/lists/${spot.listId}/spots`,
+        {
+          method: 'DELETE',
+          body: JSON.stringify({ spotId: spot.id }),
+          headers: { 'Content-Type': 'application/json' },
+        },
+      )
+      return response.json() as Promise<Spot>
+    },
+    onSuccess: (spot) => {
+      // Add it "eagerly" before the re-fetch comes into effect
+      removeSpot(spot.listId, spot.id)
+      queryClient.invalidateQueries({ queryKey: ['spots'] })
+    },
+  })
+
   return {
     listsQuery,
     createListMutation,
+    updateListMutation,
     deleteListMutation,
     createSpotMutation,
     updateSpotMutation,
+    deleteSpotMutation,
   }
 }

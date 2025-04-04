@@ -122,3 +122,65 @@ export const PUT: APIRoute = async ({
     return new Response(msg, { status: 500 })
   }
 }
+
+export const DELETE: APIRoute = async ({
+  request,
+  params,
+}) => {
+  try {
+    const session = await auth.api.getSession({
+      headers: request.headers,
+    })
+
+    if (!session)
+      return new Response('Unauthorized', { status: 401 })
+
+    if (!params.listId)
+      return new Response('Missing listId', { status: 400 })
+
+    const { spotId } = (await request.json()) as {
+      spotId: number
+    }
+
+    if (!spotId)
+      return new Response('Missing spot id', {
+        status: 400,
+      })
+
+    //Check we have permissions to update this spot
+    const validSpot = await db
+      .select()
+      .from(spot)
+      .leftJoin(list, eq(spot.listId, list.id))
+      .where(
+        and(
+          eq(spot.id, spotId),
+          eq(spot.listId, +params.listId),
+          eq(list.userId, session.user.id),
+        ),
+      )
+
+    if (!validSpot[0])
+      return new Response('Unauthorized', { status: 401 })
+
+    const deleted = await db
+      .delete(spot)
+      .where(
+        and(
+          eq(spot.id, spotId),
+          eq(spot.listId, +params.listId),
+        ),
+      )
+      .returning()
+
+    if (!deleted[0]) throw new Error('Failed to delete')
+
+    return new Response(JSON.stringify(deleted[0]))
+  } catch (error) {
+    const msg =
+      error instanceof Error
+        ? error.message
+        : 'An error occurred'
+    return new Response(msg, { status: 500 })
+  }
+}

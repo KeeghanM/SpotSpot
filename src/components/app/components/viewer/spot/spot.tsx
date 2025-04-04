@@ -13,6 +13,7 @@ import {
   IoCheckmarkDoneCircle,
   IoStarOutline,
   IoStar,
+  IoOpenOutline,
 } from 'react-icons/io5'
 import { useEffect, useState } from 'react'
 import { Label } from '@/components/ui/label'
@@ -26,7 +27,9 @@ interface SpotProps {
 }
 
 export default function Spot({ spot }: SpotProps) {
-  const { updateSpotMutation } = useListsQueries()
+  const { updateSpotMutation, deleteSpotMutation } =
+    useListsQueries()
+  const [confirmDelete, setConfirmDelete] = useState(false)
   const [open, setOpen] = useState(false)
   const [name, setName] = useState(spot.name)
   const [locationName, setLocationName] = useState(
@@ -47,11 +50,30 @@ export default function Spot({ spot }: SpotProps) {
   const [rating, setRating] = useState(spot.rating ?? 0)
   const [notes, setNotes] = useState(spot.notes ?? '')
 
-  useEffect(() => {
-    if (!updateSpotMutation.isSuccess) return
+  const handleDeleteSpot = (e: React.MouseEvent) => {
+    e.preventDefault()
+    if (confirmDelete) {
+      deleteSpotMutation.mutate(spot)
+      setConfirmDelete(false)
+    } else {
+      setConfirmDelete(true)
+    }
+  }
 
-    setOpen(false)
-  }, [updateSpotMutation.isSuccess])
+  useEffect(() => {
+    if (
+      updateSpotMutation.isSuccess ||
+      deleteSpotMutation.isSuccess
+    )
+      setOpen(false)
+  }, [
+    updateSpotMutation.isSuccess,
+    deleteSpotMutation.isSuccess,
+  ])
+
+  useEffect(() => {
+    setConfirmDelete(false)
+  }, [open])
 
   return (
     <Dialog
@@ -83,6 +105,19 @@ export default function Spot({ spot }: SpotProps) {
                 </div>
               ))}
             </div>
+          )}
+          {spot.locationLink && (
+            <a
+              href={spot.locationLink}
+              target="_blank"
+              className="text-primary mt-4 text-sm hover:underline"
+            >
+              {spot.locationName!.length > 30
+                ? spot.locationName!.substring(0, 29) +
+                  '...'
+                : spot.locationName}{' '}
+              <IoOpenOutline className="inline h-4 w-4" />
+            </a>
           )}
         </div>
       </DialogTrigger>
@@ -131,19 +166,35 @@ export default function Spot({ spot }: SpotProps) {
               >
                 Location
               </Label>
-              <Location
-                location={{
-                  name: locationName,
-                  address: locationAddress,
-                  link: locationLink,
-                }}
-                setLocation={(name, address, link) => {
-                  setLocationName(name)
-                  setLocationAddress(address)
-                  setLocationLink(link)
-                }}
-                className="col-span-3"
-              />
+              <div className="col-span-3">
+                <Location
+                  location={{
+                    name: locationName,
+                    address: locationAddress,
+                    link: locationLink,
+                  }}
+                  setLocation={(name, address, link) => {
+                    setLocationName(name)
+                    setLocationAddress(address)
+                    setLocationLink(link)
+                  }}
+                />
+                {spot.locationLink && (
+                  <a
+                    href={spot.locationLink}
+                    target="_blank"
+                    className="text-primary mt-4 text-sm hover:underline"
+                  >
+                    {spot.locationName!.length > 30
+                      ? spot.locationName!.substring(
+                          0,
+                          29,
+                        ) + '...'
+                      : spot.locationName}{' '}
+                    <IoOpenOutline className="inline h-4 w-4" />
+                  </a>
+                )}
+              </div>
             </div>
             <div className="grid grid-cols-4 items-center gap-4">
               <Label
@@ -183,8 +234,7 @@ export default function Spot({ spot }: SpotProps) {
                     }}
                     className="text-primary cursor-pointer transition-colors"
                   >
-                    {rating >= star ||
-                    tempRating >= star ? (
+                    {tempRating >= star ? (
                       <IoStar className="h-6 w-6" />
                     ) : (
                       <IoStarOutline className="h-6 w-6" />
@@ -213,17 +263,37 @@ export default function Spot({ spot }: SpotProps) {
             </div>
           </div>
           <DialogFooter>
+            <Button
+              variant="destructive"
+              disabled={
+                updateSpotMutation.isPending ||
+                deleteSpotMutation.isPending
+              }
+              onClick={handleDeleteSpot}
+              className="mr-auto"
+            >
+              {confirmDelete ? 'Are you sure?' : 'Delete'}
+            </Button>
             <DialogClose asChild>
               <Button
-                disabled={updateSpotMutation.isPending}
+                disabled={
+                  updateSpotMutation.isPending ||
+                  deleteSpotMutation.isPending
+                }
                 variant="outline"
+                onClick={(e) => {
+                  e.preventDefault()
+                  setOpen(false)
+                }}
               >
                 Close
               </Button>
             </DialogClose>
             <Button
               disabled={
-                updateSpotMutation.isPending || name === ''
+                updateSpotMutation.isPending ||
+                deleteSpotMutation.isPending ||
+                name === ''
               }
               type="submit"
             >
