@@ -210,7 +210,9 @@ export default function Spot({ spot }: SpotProps) {
                   key={'star-' + star}
                   onMouseOver={() => setTempRating(star)}
                   onClick={() => {
-                    setRating(star)
+                    rating === star
+                      ? setRating(0)
+                      : setRating(star)
                     setVisited(true)
                   }}
                   className="text-primary cursor-pointer transition-colors"
