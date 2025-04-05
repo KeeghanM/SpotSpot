@@ -7,11 +7,16 @@ import {
   useListsStore,
   type ListWithSpots,
   type Spot,
+  type Tag,
 } from '../stores/lists'
 import { useEffect } from 'react'
 
 const fetchLists = async (): Promise<ListWithSpots[]> => {
   const response = await fetch('/api/lists')
+  return response.json()
+}
+const fetchTags = async (): Promise<Tag[]> => {
+  const response = await fetch('/api/tags')
   return response.json()
 }
 export function useListsQueries() {
@@ -30,6 +35,10 @@ export function useListsQueries() {
     queryKey: ['lists'],
     queryFn: fetchLists,
   })
+  const tagsQuery = useQuery({
+    queryKey: ['tags'],
+    queryFn: fetchTags,
+  })
 
   // Update Zustand store whenever queries fetch new data
   useEffect(() => {
@@ -37,6 +46,12 @@ export function useListsQueries() {
 
     useListsStore.setState({ lists: listsQuery.data })
   }, [listsQuery.data])
+
+  useEffect(() => {
+    if (!tagsQuery.data) return
+
+    useListsStore.setState({ tags: tagsQuery.data })
+  }, [tagsQuery.data])
 
   // Mutations for adding/deleting etc etc
   const createListMutation = useMutation({
@@ -123,9 +138,10 @@ export function useListsQueries() {
       return response.json() as Promise<Spot>
     },
     onSuccess: (spot) => {
-      // Add it "eagerly" before the re-fetch comes into effect
+      // Update it "eagerly" before the re-fetch comes into effect
       updateSpot(spot.listId, spot)
       queryClient.invalidateQueries({ queryKey: ['spots'] })
+      queryClient.invalidateQueries({ queryKey: ['tags'] })
     },
   })
 
@@ -142,7 +158,7 @@ export function useListsQueries() {
       return response.json() as Promise<Spot>
     },
     onSuccess: (spot) => {
-      // Add it "eagerly" before the re-fetch comes into effect
+      // Remove it "eagerly" before the re-fetch comes into effect
       removeSpot(spot.listId, spot.id)
       queryClient.invalidateQueries({ queryKey: ['spots'] })
     },

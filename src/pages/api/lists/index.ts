@@ -1,6 +1,6 @@
 import { auth } from '@/lib/auth/auth'
 import { db } from '@/lib/db/db'
-import { list, spot } from '@/lib/db/schema'
+import { list, spot, spotTag, tag } from '@/lib/db/schema'
 import type { APIRoute } from 'astro'
 import { and, eq, inArray } from 'drizzle-orm'
 
@@ -28,11 +28,32 @@ export const GET: APIRoute = async ({ request }) => {
         ),
       )
 
+    const tags = await db
+      .select({
+        id: tag.id,
+        name: tag.name,
+        spotId: spotTag.spotId,
+      })
+      .from(tag)
+      .fullJoin(spotTag, eq(spotTag.tagId, tag.id))
+      .where(
+        inArray(
+          spotTag.spotId,
+          spots.map((s) => s.id),
+        ),
+      )
+      .orderBy(spotTag.spotId, tag.name)
+
     const listsWithSpots = lists.map((l) => {
-      const spotsForList = spots.filter(
+      const spotsWithTags = spots.map((s) => {
+        const tagsForSpot = tags.filter(
+          (t) => t.spotId === s.id,
+        )
+        return { ...s, tags: tagsForSpot }
+      })
+      const spotsForList = spotsWithTags.filter(
         (s) => s.listId === l.id,
       )
-
       return { ...l, spots: spotsForList }
     })
 

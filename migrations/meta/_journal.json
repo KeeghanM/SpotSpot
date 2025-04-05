@@ -29,6 +29,20 @@
       "when": 1743699656544,
       "tag": "0003_happy_reaper",
       "breakpoints": true
+    },
+    {
+      "idx": 4,
+      "version": "6",
+      "when": 1743864029375,
+      "tag": "0004_blue_doctor_octopus",
+      "breakpoints": true
+    },
+    {
+      "idx": 5,
+      "version": "6",
+      "when": 1743869801894,
+      "tag": "0005_secret_satana",
+      "breakpoints": true
     }
   ]
 }

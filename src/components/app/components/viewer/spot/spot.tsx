@@ -22,6 +22,9 @@ import { Button } from '@/components/ui/button'
 import { useListsQueries } from '../../../hooks/useListsQueries'
 import { Textarea } from '@/components/ui/textarea'
 import Location from './location'
+import Rating from './rating'
+import Display from './display'
+import Editor from './editor'
 interface SpotProps {
   spot: Spot
 }
@@ -44,11 +47,9 @@ export default function Spot({ spot }: SpotProps) {
   const [visited, setVisited] = useState(
     spot.visited ?? false,
   )
-  const [tempRating, setTempRating] = useState(
-    spot.rating ?? 0,
-  )
   const [rating, setRating] = useState(spot.rating ?? 0)
   const [notes, setNotes] = useState(spot.notes ?? '')
+  const [tags, setTags] = useState(spot.tags ?? [])
 
   const handleDeleteSpot = (e: React.MouseEvent) => {
     if (confirmDelete) {
@@ -80,171 +81,35 @@ export default function Spot({ spot }: SpotProps) {
       onOpenChange={setOpen}
     >
       <DialogTrigger asChild>
-        <div
-          className={`cursor-pointer rounded border p-4 ${
-            spot.visited ? 'bg-accent' : ''
-          }`}
-        >
-          <div className="flex items-center gap-2">
-            <p>{spot.name}</p>
-            {spot.visited && <IoCheckmarkDoneCircle />}
-          </div>
-          {spot.rating && spot.rating > 0 ? (
-            <div className="flex items-center gap-1">
-              {[1, 2, 3, 4, 5].map((star) => (
-                <div
-                  key={'star-' + star}
-                  className="text-foreground"
-                >
-                  {spot.rating && spot.rating >= star ? (
-                    <IoStar className="h-4 w-4" />
-                  ) : (
-                    <IoStarOutline className="h-4 w-4" />
-                  )}
-                </div>
-              ))}
-            </div>
-          ) : null}
-          {spot.locationLink && (
-            <a
-              href={spot.locationLink}
-              target="_blank"
-              className="text-primary mt-4 text-sm hover:underline"
-            >
-              {spot.locationName!.length > 30
-                ? spot.locationName!.substring(0, 29) +
-                  '...'
-                : spot.locationName}{' '}
-              <IoOpenOutline className="inline h-4 w-4" />
-            </a>
-          )}
-        </div>
+        <Display
+          spot={spot}
+          open={() => setOpen(true)}
+        />
       </DialogTrigger>
       <DialogContent className="sm:max-w-[425px]">
         <DialogHeader>
           <DialogTitle>Edit Spot</DialogTitle>
         </DialogHeader>
-        <div className="grid gap-4 py-4">
-          <div className="grid grid-cols-4 items-center gap-4">
-            <Label
-              htmlFor="name"
-              className="text-right"
-            >
-              Name
-            </Label>
-            <Input
-              id="name"
-              placeholder="Restaurant, Park, etc."
-              value={name}
-              onChange={(e) => {
-                setName(e.target.value)
-              }}
-              className="col-span-3"
-            />
-          </div>
-          <div className="grid grid-cols-4 items-center gap-4">
-            <Label
-              htmlFor="location"
-              className="text-right"
-            >
-              Location
-            </Label>
-            <div className="col-span-3">
-              <Location
-                location={{
-                  name: locationName,
-                  address: locationAddress,
-                  link: locationLink,
-                }}
-                setLocation={(name, address, link) => {
-                  setLocationName(name)
-                  setLocationAddress(address)
-                  setLocationLink(link)
-                }}
-              />
-              {spot.locationLink && (
-                <a
-                  href={spot.locationLink}
-                  target="_blank"
-                  className="text-primary mt-4 text-sm hover:underline"
-                >
-                  {spot.locationName!.length > 30
-                    ? spot.locationName!.substring(0, 29) +
-                      '...'
-                    : spot.locationName}{' '}
-                  <IoOpenOutline className="inline h-4 w-4" />
-                </a>
-              )}
-            </div>
-          </div>
-          <div className="grid grid-cols-4 items-center gap-4">
-            <Label
-              htmlFor="visited"
-              className="text-right"
-            >
-              Visited
-            </Label>
-            <Input
-              id="visited"
-              type="checkbox"
-              checked={visited}
-              onChange={(e) => {
-                setVisited(e.target.checked)
-              }}
-              className="col-span-3 w-4"
-            />
-          </div>
-          <div className="grid grid-cols-4 items-center gap-4">
-            <Label
-              htmlFor="rating"
-              className="text-right"
-            >
-              Rating
-            </Label>
-            <div
-              className="col-span-3 flex items-center gap-2"
-              onMouseLeave={() => setTempRating(rating)}
-            >
-              {[1, 2, 3, 4, 5].map((star) => (
-                <div
-                  key={'star-' + star}
-                  onMouseOver={() => setTempRating(star)}
-                  onClick={() => {
-                    rating === star
-                      ? setRating(0)
-                      : setRating(star)
-                    setVisited(true)
-                  }}
-                  className="text-primary cursor-pointer transition-colors"
-                >
-                  {tempRating >= star ? (
-                    <IoStar className="h-6 w-6" />
-                  ) : (
-                    <IoStarOutline className="h-6 w-6" />
-                  )}
-                </div>
-              ))}
-            </div>
-          </div>
-          <div className="grid grid-cols-4 items-center gap-4">
-            <Label
-              htmlFor="notes"
-              className="text-right"
-            >
-              Notes
-            </Label>
-            <Textarea
-              rows={3}
-              id="notes"
-              placeholder="Notes..."
-              value={notes}
-              onChange={(e) => {
-                setNotes(e.target.value)
-              }}
-              className="col-span-3"
-            />
-          </div>
-        </div>
+        <Editor
+          {...{
+            name,
+            locationName,
+            locationAddress,
+            locationLink,
+            visited,
+            rating,
+            notes,
+            tags,
+            setName,
+            setLocationName,
+            setLocationAddress,
+            setLocationLink,
+            setVisited,
+            setRating,
+            setNotes,
+            setTags,
+          }}
+        />
         <DialogFooter>
           <Button
             variant="destructive"
@@ -264,7 +129,7 @@ export default function Spot({ spot }: SpotProps) {
                 deleteSpotMutation.isPending
               }
               variant="outline"
-              onClick={(e) => {
+              onClick={() => {
                 setOpen(false)
               }}
             >
@@ -289,6 +154,7 @@ export default function Spot({ spot }: SpotProps) {
                 rating: rating,
                 listId: spot.listId,
                 notes: spot.notes,
+                tags: tags,
               })
             }}
           >

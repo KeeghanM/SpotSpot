@@ -1,13 +1,17 @@
 import { create } from 'zustand'
-import { list, spot } from '@/lib/db/schema'
+import { list, spot, tag } from '@/lib/db/schema'
+export type Tag = typeof tag.$inferSelect
 export type List = typeof list.$inferSelect
-export type Spot = typeof spot.$inferSelect
+export type Spot = typeof spot.$inferSelect & {
+  tags: Tag[]
+}
 export type ListWithSpots = List & { spots: Spot[] }
 
 interface ListsState {
   lists: ListWithSpots[]
   currentList: ListWithSpots | null
   currentSpot: Spot | null
+  tags: Tag[]
   selectList: (list: ListWithSpots | null) => void
   selectSpot: (spot: Spot) => void
   deselectList: () => void
@@ -18,12 +22,14 @@ interface ListsState {
   removeSpot: (listId: number, spotId: number) => void
   updateList: (list: List) => void
   updateSpot: (listId: number, spot: Spot) => void
+  setTags: (tags: Tag[]) => void
 }
 export const useListsStore = create<ListsState>()(
   (set) => ({
     lists: [],
     currentList: null,
     currentSpot: null,
+    tags: [],
     selectList: (list) =>
       set(() => ({ currentList: list })),
     selectSpot: (spot) =>
@@ -90,5 +96,6 @@ export const useListsStore = create<ListsState>()(
         })
         return { lists }
       }),
+    setTags: (tags) => set(() => ({ tags })),
   }),
 )

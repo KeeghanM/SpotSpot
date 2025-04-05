@@ -34,7 +34,6 @@ export const spot = sqliteTable('spot', {
 export const tag = sqliteTable('tag', {
   id: integer('id').primaryKey(),
   name: text('name').notNull(),
-  color: text('color').notNull(),
   userId: text('user_id')
     .notNull()
     .references(() => user.id, { onDelete: 'cascade' }),
