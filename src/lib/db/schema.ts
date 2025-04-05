@@ -31,6 +31,25 @@ export const spot = sqliteTable('spot', {
     .references(() => list.id, { onDelete: 'cascade' }),
 })
 
+export const tag = sqliteTable('tag', {
+  id: integer('id').primaryKey(),
+  name: text('name').notNull(),
+  color: text('color').notNull(),
+  userId: text('user_id')
+    .notNull()
+    .references(() => user.id, { onDelete: 'cascade' }),
+})
+
+export const spotTag = sqliteTable('spot_tag', {
+  id: integer('id').primaryKey(),
+  spotId: integer('spot_id')
+    .notNull()
+    .references(() => spot.id, { onDelete: 'cascade' }),
+  tagId: integer('tag_id')
+    .notNull()
+    .references(() => tag.id, { onDelete: 'cascade' }),
+})
+
 // Auth Tables
 export const user = sqliteTable('user', {
   id: text('id').primaryKey(),

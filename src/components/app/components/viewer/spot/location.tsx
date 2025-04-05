@@ -21,6 +21,7 @@ export default function Location({
     useState<google.maps.places.Autocomplete | null>(null)
   const inputRef = useRef<HTMLInputElement>(null)
   const places = useMapsLibrary('places')
+  const observerRef = useRef<MutationObserver | null>(null)
 
   const addressToURL = (address: string) => {
     if (!address) return ''
@@ -41,25 +42,96 @@ export default function Location({
         'url',
       ],
     }
-    setPlaceAutocomplete(
-      new places.Autocomplete(inputRef.current, options),
+    const autocomplete = new places.Autocomplete(
+      inputRef.current,
+      options,
     )
+    setPlaceAutocomplete(autocomplete)
+
+    const listener = autocomplete.addListener(
+      'place_changed',
+      () => {
+        const place = autocomplete.getPlace()
+        if (!place) return
+
+        setLocation(
+          place.name ?? '',
+          place.formatted_address ?? '',
+          place.url ??
+            addressToURL(place.formatted_address ?? ''),
+        )
+      },
+    )
+
+    return () => {
+      if (listener)
+        google.maps.event.removeListener(listener)
+      if (autocomplete) autocomplete.unbindAll()
+    }
   }, [places])
 
   useEffect(() => {
-    if (!placeAutocomplete) return
-    placeAutocomplete.addListener('place_changed', () => {
-      const place = placeAutocomplete.getPlace()
-      if (!place) return
+    if (observerRef.current) {
+      observerRef.current.disconnect()
+    }
 
-      setLocation(
-        place.name ?? '',
-        place.formatted_address ?? '',
-        place.url ??
-          addressToURL(place.formatted_address ?? ''),
-      )
+    const observer = new MutationObserver((mutations) => {
+      for (const mutation of mutations) {
+        if (
+          mutation.type === 'childList' &&
+          mutation.addedNodes.length > 0
+        ) {
+          const pacContainer = document.querySelector(
+            '.pac-container',
+          )
+          if (pacContainer) {
+            const stopPropagation = (e: Event) => {
+              e.stopPropagation()
+            }
+
+            pacContainer.addEventListener(
+              'mousedown',
+              stopPropagation,
+              true,
+            )
+            pacContainer.addEventListener(
+              'pointerdown',
+              stopPropagation,
+              true,
+            )
+
+            pacContainer
+              .querySelectorAll('.pac-item')
+              .forEach((item) => {
+                item.addEventListener(
+                  'mousedown',
+                  stopPropagation,
+                  true,
+                )
+                item.addEventListener(
+                  'pointerdown',
+                  stopPropagation,
+                  true,
+                )
+              })
+
+            observer.disconnect()
+          }
+        }
+      }
     })
-  }, [placeAutocomplete])
+
+    observer.observe(document.body, {
+      childList: true,
+      subtree: true,
+    })
+
+    observerRef.current = observer
+
+    return () => {
+      observer.disconnect()
+    }
+  }, [])
 
   return (
     <Input

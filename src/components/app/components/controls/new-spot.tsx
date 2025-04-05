@@ -21,9 +21,6 @@ export default function NewList() {
   const { currentList } = useListsStore()
   const [open, setOpen] = useState(false)
   const [name, setName] = useState('')
-  const [locationName, setLocationName] = useState('')
-  const [locationAddress, setLocationAddress] = useState('')
-  const [locationLink, setLocationLink] = useState('')
 
   useEffect(() => {
     if (!createSpotMutation.isSuccess) return
@@ -33,9 +30,6 @@ export default function NewList() {
 
   useEffect(() => {
     setName('')
-    setLocationName('')
-    setLocationAddress('')
-    setLocationLink('')
   }, [open])
 
   return (
@@ -53,88 +47,63 @@ export default function NewList() {
         </Button>
       </DialogTrigger>
       <DialogContent className="sm:max-w-[425px]">
-        <form
-          onSubmit={(e) => {
-            e.preventDefault()
-            createSpotMutation.mutate({
-              name: name,
-              locationName: locationName,
-              locationAddress: locationAddress,
-              locationLink: locationLink,
-              listId: currentList!.id,
-              notes: '',
-              rating: 0,
-              visited: false,
-            })
-          }}
-        >
-          <DialogHeader>
-            <DialogTitle>New Spot</DialogTitle>
-            <DialogDescription className="text-foreground">
-              Add a new spot to the list. Click create when
-              you're ready.
-            </DialogDescription>
-          </DialogHeader>
-          <div className="grid gap-4 py-4">
-            <div className="grid grid-cols-4 items-center gap-4">
-              <Label
-                htmlFor="name"
-                className="text-right"
-              >
-                Name
-              </Label>
-              <Input
-                id="name"
-                placeholder="Tasty Fries"
-                value={name}
-                onChange={(e) => {
-                  setName(e.target.value)
-                }}
-                className="col-span-3"
-              />
-            </div>
-            <div className="grid grid-cols-4 items-center gap-4">
-              <Label
-                htmlFor="location"
-                className="text-right"
-              >
-                Location
-              </Label>
-              <Location
-                location={{
-                  name: locationName,
-                  address: locationAddress,
-                  link: locationLink,
-                }}
-                setLocation={(name, address, link) => {
-                  setLocationName(name)
-                  setLocationAddress(address)
-                  setLocationLink(link)
-                }}
-                className="col-span-3"
-              />
-            </div>
-          </div>
-          <DialogFooter>
-            <DialogClose asChild>
-              <Button
-                disabled={createSpotMutation.isPending}
-                type="button"
-                variant="outline"
-              >
-                Close
-              </Button>
-            </DialogClose>
-            <Button
-              disabled={
-                createSpotMutation.isPending || name === ''
-              }
-              type="submit"
+        <DialogHeader>
+          <DialogTitle>New Spot</DialogTitle>
+          <DialogDescription className="text-foreground">
+            Add a new spot to the list. Click create when
+            you're ready.
+          </DialogDescription>
+        </DialogHeader>
+        <div className="grid gap-4 py-4">
+          <div className="grid grid-cols-4 items-center gap-4">
+            <Label
+              htmlFor="name"
+              className="text-right"
             >
-              Create Spot
+              Name
+            </Label>
+            <Input
+              id="name"
+              placeholder="Tasty Fries"
+              value={name}
+              onChange={(e) => {
+                setName(e.target.value)
+              }}
+              className="col-span-3"
+            />
+          </div>
+        </div>
+        <DialogFooter>
+          <DialogClose asChild>
+            <Button
+              disabled={createSpotMutation.isPending}
+              type="button"
+              variant="outline"
+            >
+              Close
             </Button>
-          </DialogFooter>
-        </form>
+          </DialogClose>
+          <Button
+            disabled={
+              createSpotMutation.isPending || name === ''
+            }
+            type="submit"
+            onClick={() => {
+              createSpotMutation.mutate({
+                name: name,
+                locationName: '',
+                locationAddress: '',
+                locationLink: '',
+                listId: currentList!.id,
+                notes: '',
+                rating: 0,
+                visited: false,
+              })
+            }}
+          >
+            Create Spot
+          </Button>
+        </DialogFooter>
       </DialogContent>
     </Dialog>
   )

@@ -104,7 +104,6 @@ if (Astro.locals.session) {
 <script>
   import { authClient } from '@/lib/auth/client-astro'
 
-  // Get DOM elements
   const loginButton =
     document.getElementById('login-button')
   const emailInput = document.getElementById(
@@ -119,25 +118,20 @@ if (Astro.locals.session) {
   const errorMessage =
     document.getElementById('error-message')
 
-  // Handle login submission
   loginButton?.addEventListener('click', async () => {
-    // Hide any previous errors
     errorContainer?.classList.add('hidden')
 
-    // Basic validation
     if (!emailInput.value || !passwordInput.value) {
       showError('Please enter both email and password')
       return
     }
 
     try {
-      // Disable button during login attempt
       if (loginButton) {
         loginButton.setAttribute('disabled', 'true')
         loginButton.textContent = 'Logging in...'
       }
 
-      // Attempt to sign in
       await authClient.signIn.email({
         email: emailInput.value,
         password: passwordInput.value,
@@ -151,13 +145,10 @@ if (Astro.locals.session) {
         },
       })
     } catch (error) {
-      // Handle any errors
-      console.error('Login error:', error)
       showError(
         'An error occurred during login. Please try again.',
       )
     } finally {
-      // Re-enable button
       if (loginButton) {
         loginButton.removeAttribute('disabled')
         loginButton.textContent = 'Log in'
@@ -165,7 +156,6 @@ if (Astro.locals.session) {
     }
   })
 
-  // Function to display error messages
   function showError(message: string) {
     if (errorMessage && errorContainer) {
       errorMessage.textContent = message
@@ -173,7 +163,6 @@ if (Astro.locals.session) {
     }
   }
 
-  // Add enter key support
   passwordInput?.addEventListener('keydown', (e) => {
     if (e.key === 'Enter') {
       loginButton?.click()

@@ -107,7 +107,6 @@ if (Astro.locals.session) {
 <script>
   import { authClient } from '@/lib/auth/client-astro'
 
-  // Get DOM elements
   const registerButton = document.getElementById(
     'register-button',
   )
@@ -126,12 +125,9 @@ if (Astro.locals.session) {
   const errorMessage =
     document.getElementById('error-message')
 
-  // Handle registration submission
   registerButton?.addEventListener('click', async () => {
-    // Hide any previous errors
     errorContainer?.classList.add('hidden')
 
-    // Basic validation
     if (
       !nameInput.value ||
       !emailInput.value ||
@@ -141,20 +137,17 @@ if (Astro.locals.session) {
       return
     }
 
-    // Password validation
     if (passwordInput.value.length < 8) {
       showError('Password must be at least 8 characters')
       return
     }
 
     try {
-      // Disable button during registration attempt
       if (registerButton) {
         registerButton.setAttribute('disabled', 'true')
         registerButton.textContent = 'Creating account...'
       }
 
-      // Attempt to register
       await authClient.signUp.email({
         name: nameInput.value,
         email: emailInput.value,
@@ -171,10 +164,6 @@ if (Astro.locals.session) {
         },
       })
     } catch (error) {
-      // Handle specific errors
-      console.error('Registration error:', error)
-
-      // Check for common error types
       if (error instanceof Error) {
         if (
           error.message.includes('email') &&
@@ -191,7 +180,6 @@ if (Astro.locals.session) {
         'An error occurred during registration. Please try again.',
       )
     } finally {
-      // Re-enable button
       if (registerButton) {
         registerButton.removeAttribute('disabled')
         registerButton.textContent = 'Create Account'
@@ -199,7 +187,6 @@ if (Astro.locals.session) {
     }
   })
 
-  // Function to display error messages
   function showError(message: string) {
     if (errorMessage && errorContainer) {
       errorMessage.textContent = message
@@ -207,7 +194,6 @@ if (Astro.locals.session) {
     }
   }
 
-  // Add enter key support
   passwordInput?.addEventListener('keydown', (e) => {
     if (e.key === 'Enter') {
       registerButton?.click()

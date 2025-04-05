@@ -51,7 +51,6 @@ export default function Spot({ spot }: SpotProps) {
   const [notes, setNotes] = useState(spot.notes ?? '')
 
   const handleDeleteSpot = (e: React.MouseEvent) => {
-    e.preventDefault()
     if (confirmDelete) {
       deleteSpotMutation.mutate(spot)
       setConfirmDelete(false)
@@ -122,185 +121,178 @@ export default function Spot({ spot }: SpotProps) {
         </div>
       </DialogTrigger>
       <DialogContent className="sm:max-w-[425px]">
-        <form
-          onSubmit={(e) => {
-            e.preventDefault()
-            updateSpotMutation.mutate({
-              id: spot.id,
-              name: name,
-              locationName: locationName,
-              locationAddress: locationAddress,
-              locationLink: locationLink,
-              visited: visited,
-              rating: rating,
-              listId: spot.listId,
-              notes: spot.notes,
-            })
-          }}
-        >
-          <DialogHeader>
-            <DialogTitle>Edit Spot</DialogTitle>
-          </DialogHeader>
-          <div className="grid gap-4 py-4">
-            <div className="grid grid-cols-4 items-center gap-4">
-              <Label
-                htmlFor="name"
-                className="text-right"
-              >
-                Name
-              </Label>
-              <Input
-                id="name"
-                placeholder="Restaurant, Park, etc."
-                value={name}
-                onChange={(e) => {
-                  setName(e.target.value)
+        <DialogHeader>
+          <DialogTitle>Edit Spot</DialogTitle>
+        </DialogHeader>
+        <div className="grid gap-4 py-4">
+          <div className="grid grid-cols-4 items-center gap-4">
+            <Label
+              htmlFor="name"
+              className="text-right"
+            >
+              Name
+            </Label>
+            <Input
+              id="name"
+              placeholder="Restaurant, Park, etc."
+              value={name}
+              onChange={(e) => {
+                setName(e.target.value)
+              }}
+              className="col-span-3"
+            />
+          </div>
+          <div className="grid grid-cols-4 items-center gap-4">
+            <Label
+              htmlFor="location"
+              className="text-right"
+            >
+              Location
+            </Label>
+            <div className="col-span-3">
+              <Location
+                location={{
+                  name: locationName,
+                  address: locationAddress,
+                  link: locationLink,
                 }}
-                className="col-span-3"
-              />
-            </div>
-            <div className="grid grid-cols-4 items-center gap-4">
-              <Label
-                htmlFor="location"
-                className="text-right"
-              >
-                Location
-              </Label>
-              <div className="col-span-3">
-                <Location
-                  location={{
-                    name: locationName,
-                    address: locationAddress,
-                    link: locationLink,
-                  }}
-                  setLocation={(name, address, link) => {
-                    setLocationName(name)
-                    setLocationAddress(address)
-                    setLocationLink(link)
-                  }}
-                />
-                {spot.locationLink && (
-                  <a
-                    href={spot.locationLink}
-                    target="_blank"
-                    className="text-primary mt-4 text-sm hover:underline"
-                  >
-                    {spot.locationName!.length > 30
-                      ? spot.locationName!.substring(
-                          0,
-                          29,
-                        ) + '...'
-                      : spot.locationName}{' '}
-                    <IoOpenOutline className="inline h-4 w-4" />
-                  </a>
-                )}
-              </div>
-            </div>
-            <div className="grid grid-cols-4 items-center gap-4">
-              <Label
-                htmlFor="visited"
-                className="text-right"
-              >
-                Visited
-              </Label>
-              <Input
-                id="visited"
-                type="checkbox"
-                checked={visited}
-                onChange={(e) => {
-                  setVisited(e.target.checked)
+                setLocation={(name, address, link) => {
+                  setLocationName(name)
+                  setLocationAddress(address)
+                  setLocationLink(link)
                 }}
-                className="col-span-3 w-4"
               />
-            </div>
-            <div className="grid grid-cols-4 items-center gap-4">
-              <Label
-                htmlFor="rating"
-                className="text-right"
-              >
-                Rating
-              </Label>
-              <div
-                className="col-span-3 flex items-center gap-2"
-                onMouseLeave={() => setTempRating(rating)}
-              >
-                {[1, 2, 3, 4, 5].map((star) => (
-                  <div
-                    key={'star-' + star}
-                    onMouseOver={() => setTempRating(star)}
-                    onClick={() => {
-                      setRating(star)
-                      setVisited(true)
-                    }}
-                    className="text-primary cursor-pointer transition-colors"
-                  >
-                    {tempRating >= star ? (
-                      <IoStar className="h-6 w-6" />
-                    ) : (
-                      <IoStarOutline className="h-6 w-6" />
-                    )}
-                  </div>
-                ))}
-              </div>
-            </div>
-            <div className="grid grid-cols-4 items-center gap-4">
-              <Label
-                htmlFor="notes"
-                className="text-right"
-              >
-                Notes
-              </Label>
-              <Textarea
-                rows={3}
-                id="notes"
-                placeholder="Notes..."
-                value={notes}
-                onChange={(e) => {
-                  setNotes(e.target.value)
-                }}
-                className="col-span-3"
-              />
+              {spot.locationLink && (
+                <a
+                  href={spot.locationLink}
+                  target="_blank"
+                  className="text-primary mt-4 text-sm hover:underline"
+                >
+                  {spot.locationName!.length > 30
+                    ? spot.locationName!.substring(0, 29) +
+                      '...'
+                    : spot.locationName}{' '}
+                  <IoOpenOutline className="inline h-4 w-4" />
+                </a>
+              )}
             </div>
           </div>
-          <DialogFooter>
+          <div className="grid grid-cols-4 items-center gap-4">
+            <Label
+              htmlFor="visited"
+              className="text-right"
+            >
+              Visited
+            </Label>
+            <Input
+              id="visited"
+              type="checkbox"
+              checked={visited}
+              onChange={(e) => {
+                setVisited(e.target.checked)
+              }}
+              className="col-span-3 w-4"
+            />
+          </div>
+          <div className="grid grid-cols-4 items-center gap-4">
+            <Label
+              htmlFor="rating"
+              className="text-right"
+            >
+              Rating
+            </Label>
+            <div
+              className="col-span-3 flex items-center gap-2"
+              onMouseLeave={() => setTempRating(rating)}
+            >
+              {[1, 2, 3, 4, 5].map((star) => (
+                <div
+                  key={'star-' + star}
+                  onMouseOver={() => setTempRating(star)}
+                  onClick={() => {
+                    setRating(star)
+                    setVisited(true)
+                  }}
+                  className="text-primary cursor-pointer transition-colors"
+                >
+                  {tempRating >= star ? (
+                    <IoStar className="h-6 w-6" />
+                  ) : (
+                    <IoStarOutline className="h-6 w-6" />
+                  )}
+                </div>
+              ))}
+            </div>
+          </div>
+          <div className="grid grid-cols-4 items-center gap-4">
+            <Label
+              htmlFor="notes"
+              className="text-right"
+            >
+              Notes
+            </Label>
+            <Textarea
+              rows={3}
+              id="notes"
+              placeholder="Notes..."
+              value={notes}
+              onChange={(e) => {
+                setNotes(e.target.value)
+              }}
+              className="col-span-3"
+            />
+          </div>
+        </div>
+        <DialogFooter>
+          <Button
+            variant="destructive"
+            disabled={
+              updateSpotMutation.isPending ||
+              deleteSpotMutation.isPending
+            }
+            onClick={handleDeleteSpot}
+            className="mr-auto"
+          >
+            {confirmDelete ? 'Are you sure?' : 'Delete'}
+          </Button>
+          <DialogClose asChild>
             <Button
-              variant="destructive"
               disabled={
                 updateSpotMutation.isPending ||
                 deleteSpotMutation.isPending
               }
-              onClick={handleDeleteSpot}
-              className="mr-auto"
+              variant="outline"
+              onClick={(e) => {
+                setOpen(false)
+              }}
             >
-              {confirmDelete ? 'Are you sure?' : 'Delete'}
+              Close
             </Button>
-            <DialogClose asChild>
-              <Button
-                disabled={
-                  updateSpotMutation.isPending ||
-                  deleteSpotMutation.isPending
-                }
-                variant="outline"
-                onClick={(e) => {
-                  e.preventDefault()
-                  setOpen(false)
-                }}
-              >
-                Close
-              </Button>
-            </DialogClose>
-            <Button
-              disabled={
-                updateSpotMutation.isPending ||
-                deleteSpotMutation.isPending ||
-                name === ''
-              }
-              type="submit"
-            >
-              Update Spot
-            </Button>
-          </DialogFooter>
-        </form>
+          </DialogClose>
+          <Button
+            disabled={
+              updateSpotMutation.isPending ||
+              deleteSpotMutation.isPending ||
+              name === ''
+            }
+            type="submit"
+            onClick={() => {
+              updateSpotMutation.mutate({
+                id: spot.id,
+                name: name,
+                locationName: locationName,
+                locationAddress: locationAddress,
+                locationLink: locationLink,
+                visited: visited,
+                rating: rating,
+                listId: spot.listId,
+                notes: spot.notes,
+              })
+            }}
+          >
+            Update Spot
+          </Button>
+        </DialogFooter>
       </DialogContent>
     </Dialog>
   )

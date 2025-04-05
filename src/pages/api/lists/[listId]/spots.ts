@@ -114,7 +114,6 @@ export const PUT: APIRoute = async ({
 
     return new Response(JSON.stringify(updated[0]))
   } catch (error) {
-    console.error(error)
     const msg =
       error instanceof Error
         ? error.message
