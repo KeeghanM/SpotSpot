@@ -6,12 +6,14 @@ import {
 import Spot from './spot'
 import { useListsQueries } from '../../hooks/useListsQueries'
 import { useState } from 'react'
+import { useFiltersStore } from '../../stores/filters'
 
 interface ListProps {
   list: ListWithSpots
 }
 export default function List({ list }: ListProps) {
   const { currentList, selectList } = useListsStore()
+  const { selectedTags, showVisited } = useFiltersStore()
   const { deleteListMutation } = useListsQueries()
   const [confirmDelete, setConfirmDelete] = useState(false)
 
@@ -61,6 +63,19 @@ export default function List({ list }: ListProps) {
         (list.spots?.length > 0 ? (
           <div className="mx-4 mt-2 flex flex-col gap-1 overflow-y-auto">
             {list.spots
+              .filter((spot) => {
+                if (selectedTags.length === 0) return true
+                return spot.tags?.some((tag) =>
+                  selectedTags.some(
+                    (selectedTag) =>
+                      tag.id === selectedTag.id,
+                  ),
+                )
+              })
+              .filter((spot) => {
+                if (showVisited) return true
+                return !spot.visited
+              })
               .sort((a, b) => {
                 // visited last, then alphabetical
                 if (a.visited === b.visited) {

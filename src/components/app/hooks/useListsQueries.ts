@@ -7,9 +7,12 @@ import {
   useListsStore,
   type ListWithSpots,
   type Spot,
-  type Tag,
 } from '../stores/lists'
 import { useEffect } from 'react'
+import {
+  useFiltersStore,
+  type Tag,
+} from '../stores/filters'
 
 const fetchLists = async (): Promise<ListWithSpots[]> => {
   const response = await fetch('/api/lists')
@@ -50,7 +53,7 @@ export function useListsQueries() {
   useEffect(() => {
     if (!tagsQuery.data) return
 
-    useListsStore.setState({ tags: tagsQuery.data })
+    useFiltersStore.setState({ tags: tagsQuery.data })
   }, [tagsQuery.data])
 
   // Mutations for adding/deleting etc etc

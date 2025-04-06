@@ -1,15 +1,14 @@
-import Creatable from 'react-select/creatable'
-import {
-  useListsStore,
-  type Tag,
-} from '@/components/app/stores/lists'
 import { Input } from '@/components/ui/input'
 import { Label } from '@/components/ui/label'
 import Location from './location'
 import { IoOpenOutline } from 'react-icons/io5'
 import Rating from './rating'
 import { Textarea } from '@/components/ui/textarea'
-import { authClient } from '@/lib/auth/client-react'
+import {
+  useFiltersStore,
+  type Tag,
+} from '@/components/app/stores/filters'
+import Tags from './tags'
 
 interface EditorProps {
   name: string
@@ -47,9 +46,6 @@ export default function Editor({
   setNotes,
   setTags,
 }: EditorProps) {
-  const { tags: availableTags } = useListsStore()
-  const { data: userData } = authClient.useSession()
-
   return (
     <div className="grid gap-4 py-4">
       <div className="grid grid-cols-4 items-center gap-4">
@@ -156,35 +152,7 @@ export default function Editor({
           className="col-span-3"
         />
       </div>
-      <Creatable
-        options={availableTags.map((tag) => ({
-          label: tag.name,
-          value: tag.id,
-        }))}
-        defaultValue={spotTags.map((tag) => ({
-          label: tag.name,
-          value: tag.id,
-        }))}
-        onChange={(selectedTags) => {
-          const newTags = selectedTags.map((tag) => {
-            if (tag.value.toString() === tag.label) {
-              return {
-                id: -1,
-                name: tag.value.toString(),
-                userId: userData!.user.id,
-              }
-            } else {
-              return {
-                id: tag.value,
-                name: tag.label,
-                userId: userData!.user.id,
-              }
-            }
-          })
-          setTags(newTags)
-        }}
-        isMulti
-      />
+      <Tags {...{ spotTags, setTags }} />
     </div>
   )
 }

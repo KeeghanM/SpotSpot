@@ -7,6 +7,7 @@ import Header from './components/header'
 import Viewer from './components/viewer'
 import Controls from './components/controls'
 import { APIProvider } from '@vis.gl/react-google-maps'
+import Filters from './components/filters'
 
 const queryClient = new QueryClient()
 
@@ -25,6 +26,7 @@ function AppContent() {
     <div className="flex h-screen flex-col">
       <Header />
       <Controls />
+      <Filters />
       <Viewer />
     </div>
   )
