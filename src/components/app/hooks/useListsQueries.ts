@@ -13,6 +13,7 @@ import {
   useFiltersStore,
   type Tag,
 } from '../stores/filters'
+import { authClient } from '@/lib/auth/client-react'
 
 const fetchLists = async (): Promise<ListWithSpots[]> => {
   const response = await fetch('/api/lists')
@@ -23,6 +24,7 @@ const fetchTags = async (): Promise<Tag[]> => {
   return response.json()
 }
 export function useListsQueries() {
+  const { data: userData } = authClient.useSession()
   const queryClient = useQueryClient()
   const {
     addList,
@@ -62,87 +64,83 @@ export function useListsQueries() {
       name: string
       parentId: number | null
     }) => {
-      const response = await fetch('/api/lists', {
+      // Add it "eagerly" before the re-fetch comes into effect
+      addList({
+        ...newList,
+        id: -1,
+        spots: [],
+        userId: userData!.user.id,
+      })
+
+      await fetch('/api/lists', {
         method: 'POST',
         body: JSON.stringify({ newList }),
         headers: { 'Content-Type': 'application/json' },
       })
-      return response.json() as Promise<ListWithSpots>
     },
-    onSuccess: (newList) => {
-      // Add it "eagerly" before the re-fetch comes into effect
-      addList(newList)
+    onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ['lists'] })
     },
   })
 
   const updateListMutation = useMutation({
     mutationFn: async (list: ListWithSpots) => {
-      const response = await fetch('/api/lists', {
+      // Add it "eagerly" before the re-fetch comes into effect
+      updateList(list)
+
+      await fetch('/api/lists', {
         method: 'PUT',
         body: JSON.stringify({ listToUpdate: list }),
         headers: { 'Content-Type': 'application/json' },
       })
-      return response.json() as Promise<ListWithSpots>
     },
-    onSuccess: (list) => {
-      // Add it "eagerly" before the re-fetch comes into effect
-      updateList(list)
+    onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ['lists'] })
     },
   })
 
   const deleteListMutation = useMutation({
     mutationFn: async (id: number) => {
-      const response = await fetch('/api/lists', {
+      // Remove it "eagerly" before the re-fetch comes into effect
+      removeList(id)
+
+      await fetch('/api/lists', {
         method: 'DELETE',
         body: JSON.stringify({ id }),
         headers: { 'Content-Type': 'application/json' },
       })
-      return id
     },
-    onSuccess: (id) => {
-      // Remove it "eagerly" before the re-fetch comes into effect
-      removeList(id)
+    onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ['lists'] })
     },
   })
 
   const createSpotMutation = useMutation({
     mutationFn: async (newSpot: Omit<Spot, 'id'>) => {
-      const response = await fetch(
-        `/api/lists/${newSpot.listId}/spots`,
-        {
-          method: 'POST',
-          body: JSON.stringify({ newSpot }),
-          headers: { 'Content-Type': 'application/json' },
-        },
-      )
-      const spot = (await response.json()) as Spot
-      return { listId: newSpot.listId, spot }
-    },
-    onSuccess: ({ listId, spot }) => {
       // Add it "eagerly" before the re-fetch comes into effect
-      addSpot(listId, spot)
+      addSpot(newSpot.listId, { id: -1, ...newSpot })
+      await fetch(`/api/lists/${newSpot.listId}/spots`, {
+        method: 'POST',
+        body: JSON.stringify({ newSpot }),
+        headers: { 'Content-Type': 'application/json' },
+      })
+    },
+    onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ['spots'] })
     },
   })
 
   const updateSpotMutation = useMutation({
     mutationFn: async (spot: Spot) => {
-      const response = await fetch(
-        `/api/lists/${spot.listId}/spots`,
-        {
-          method: 'PUT',
-          body: JSON.stringify({ spotToUpdate: spot }),
-          headers: { 'Content-Type': 'application/json' },
-        },
-      )
-      return response.json() as Promise<Spot>
-    },
-    onSuccess: (spot) => {
       // Update it "eagerly" before the re-fetch comes into effect
       updateSpot(spot.listId, spot)
+      await fetch(`/api/lists/${spot.listId}/spots`, {
+        method: 'PUT',
+        body: JSON.stringify({ spotToUpdate: spot }),
+        headers: { 'Content-Type': 'application/json' },
+      })
+    },
+    onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ['spots'] })
       queryClient.invalidateQueries({ queryKey: ['tags'] })
     },
@@ -150,19 +148,15 @@ export function useListsQueries() {
 
   const deleteSpotMutation = useMutation({
     mutationFn: async (spot: Spot) => {
-      const response = await fetch(
-        `/api/lists/${spot.listId}/spots`,
-        {
-          method: 'DELETE',
-          body: JSON.stringify({ spotId: spot.id }),
-          headers: { 'Content-Type': 'application/json' },
-        },
-      )
-      return response.json() as Promise<Spot>
-    },
-    onSuccess: (spot) => {
       // Remove it "eagerly" before the re-fetch comes into effect
       removeSpot(spot.listId, spot.id)
+      await fetch(`/api/lists/${spot.listId}/spots`, {
+        method: 'DELETE',
+        body: JSON.stringify({ spotId: spot.id }),
+        headers: { 'Content-Type': 'application/json' },
+      })
+    },
+    onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ['spots'] })
     },
   })
