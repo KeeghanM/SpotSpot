@@ -1,28 +1,22 @@
 import { Input } from '@/components/ui/input'
 import { Label } from '@/components/ui/label'
-import Location from './location'
+import LocationInput from './location-input'
 import { IoOpenOutline } from 'react-icons/io5'
 import Rating from './rating'
 import { Textarea } from '@/components/ui/textarea'
-import {
-  useFiltersStore,
-  type Tag,
-} from '@/components/app/stores/filters'
 import Tags from './tags'
+import type { Tag } from '@/components/app/stores/filters'
+import type { Location } from '@/components/app/stores/lists'
 
 interface EditorProps {
   name: string
-  locationName: string
-  locationAddress: string
-  locationLink: string
+  location: Location | null
   visited: boolean
   rating: number
   notes: string
   tags: Tag[]
   setName: (name: string) => void
-  setLocationName: (name: string) => void
-  setLocationAddress: (address: string) => void
-  setLocationLink: (link: string) => void
+  setLocation: (location: Location) => void
   setVisited: (visited: boolean) => void
   setRating: (rating: number) => void
   setNotes: (notes: string) => void
@@ -30,17 +24,13 @@ interface EditorProps {
 }
 export default function Editor({
   name,
-  locationName,
-  locationAddress,
-  locationLink,
+  location,
   visited,
   rating,
   notes,
   tags: spotTags,
   setName,
-  setLocationName,
-  setLocationAddress,
-  setLocationLink,
+  setLocation,
   setVisited,
   setRating,
   setNotes,
@@ -73,27 +63,27 @@ export default function Editor({
           Location
         </Label>
         <div className="col-span-3">
-          <Location
-            location={{
-              name: locationName ?? '',
-              address: locationAddress ?? '',
-              link: locationLink ?? '',
-            }}
-            setLocation={(name, address, link) => {
-              setLocationName(name)
-              setLocationAddress(address)
-              setLocationLink(link)
-            }}
+          <LocationInput
+            location={
+              location ?? {
+                name: '',
+                address: '',
+                link: '',
+                lat: 0,
+                lng: 0,
+              }
+            }
+            setLocation={setLocation}
           />
-          {locationLink && (
+          {location?.name && location?.link && (
             <a
-              href={locationLink}
+              href={location.link}
               target="_blank"
               className="text-primary mt-4 text-sm hover:underline"
             >
-              {locationName!.length > 30
-                ? locationName!.substring(0, 29) + '...'
-                : locationName}{' '}
+              {location.name.length > 30
+                ? location.name.substring(0, 29) + '...'
+                : location.name}{' '}
               <IoOpenOutline className="inline h-4 w-4" />
             </a>
           )}

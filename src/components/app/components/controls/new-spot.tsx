@@ -14,7 +14,6 @@ import { DialogClose } from '@radix-ui/react-dialog'
 import { useEffect, useState } from 'react'
 import { useListsQueries } from '../../hooks/useListsQueries'
 import { useListsStore } from '../../stores/lists'
-import Location from '../viewer/spot/location'
 
 export default function NewList() {
   const { createSpotMutation } = useListsQueries()
@@ -98,6 +97,7 @@ export default function NewList() {
                 notes: '',
                 rating: 0,
                 visited: false,
+                tags: [],
               })
             }}
           >

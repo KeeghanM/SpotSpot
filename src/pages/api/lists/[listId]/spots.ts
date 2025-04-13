@@ -104,9 +104,11 @@ export const PUT: APIRoute = async ({
       .update(spot)
       .set({
         name: spotToUpdate.name,
-        locationName: spotToUpdate.locationName,
-        locationAddress: spotToUpdate.locationAddress,
-        locationLink: spotToUpdate.locationLink,
+        locationName: spotToUpdate.location?.name,
+        locationAddress: spotToUpdate.location?.address,
+        locationLink: spotToUpdate.location?.link,
+        locationLat: spotToUpdate.location?.lat,
+        locationLng: spotToUpdate.location?.lng,
         visited: spotToUpdate.visited,
         rating: spotToUpdate.rating,
         notes: spotToUpdate.notes,

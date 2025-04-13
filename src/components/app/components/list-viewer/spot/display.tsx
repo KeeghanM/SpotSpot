@@ -27,15 +27,15 @@ export default function Display({
       {spot.rating && spot.rating > 0 ? (
         <Rating rating={spot.rating} />
       ) : null}
-      {spot.locationLink && (
+      {spot.location?.link && spot.location?.name && (
         <a
-          href={spot.locationLink}
+          href={spot.location.link}
           target="_blank"
           className="text-primary mt-4 text-sm hover:underline"
         >
-          {spot.locationName!.length > 30
-            ? spot.locationName!.substring(0, 29) + '...'
-            : spot.locationName}{' '}
+          {spot.location.name.length > 30
+            ? spot.location.name.substring(0, 29) + '...'
+            : spot.location.name}{' '}
           <IoOpenOutline className="inline h-4 w-4" />
         </a>
       )}

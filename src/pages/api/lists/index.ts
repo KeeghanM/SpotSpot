@@ -49,7 +49,22 @@ export const GET: APIRoute = async ({ request }) => {
         const tagsForSpot = tags.filter(
           (t) => t.spotId === s.id,
         )
-        return { ...s, tags: tagsForSpot }
+        return {
+          id: s.id,
+          name: s.name,
+          visited: s.visited,
+          rating: s.rating,
+          notes: s.notes,
+          location: {
+            name: s.locationName,
+            address: s.locationAddress,
+            link: s.locationLink,
+            lat: s.locationLat,
+            lng: s.locationLng,
+          },
+          tags: tagsForSpot,
+          listId: s.listId,
+        }
       })
       const spotsForList = spotsWithTags.filter(
         (s) => s.listId === l.id,

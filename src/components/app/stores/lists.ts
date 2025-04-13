@@ -1,9 +1,23 @@
 import { create } from 'zustand'
-import { list, spot } from '@/lib/db/schema'
+import { list } from '@/lib/db/schema'
 import type { Tag } from './filters'
 export type List = typeof list.$inferSelect
-export type Spot = typeof spot.$inferSelect & {
+export type Location = {
+  name: string
+  address: string
+  link: string
+  lat: number
+  lng: number
+}
+export type Spot = {
+  id: number
+  name: string
+  visited: boolean
+  rating: number | null
+  notes: string | null
   tags: Tag[]
+  location: Location | null
+  listId: number
 }
 export type ListWithSpots = List & { spots: Spot[] }
 

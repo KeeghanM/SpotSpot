@@ -1,18 +1,14 @@
 import { useMapsLibrary } from '@vis.gl/react-google-maps'
-
 import { Input } from '@/components/ui/input'
 import { useEffect, useRef, useState } from 'react'
+import type { Location } from '@/components/app/stores/lists'
 
 interface LocationProps {
-  location: { name: string; address: string; link: string }
-  setLocation: (
-    name: string,
-    address: string,
-    link: string,
-  ) => void
+  location: Location
+  setLocation: (location: Location) => void
   className?: string
 }
-export default function Location({
+export default function LocationInput({
   location,
   setLocation,
   className,
@@ -54,12 +50,13 @@ export default function Location({
         const place = autocomplete.getPlace()
         if (!place) return
 
-        setLocation(
-          place.name ?? '',
-          place.formatted_address ?? '',
-          place.url ??
-            addressToURL(place.formatted_address ?? ''),
-        )
+        setLocation({
+          name: place.name || '',
+          address: place.formatted_address || '',
+          link: addressToURL(place.formatted_address || ''),
+          lat: place.geometry?.location?.lat() || 0,
+          lng: place.geometry?.location?.lng() || 0,
+        })
       },
     )
 

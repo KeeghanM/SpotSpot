@@ -9,40 +9,29 @@ import {
 } from '@/components/ui/dialog'
 
 import type { Spot } from '../../../stores/lists'
-import {
-  IoCheckmarkDoneCircle,
-  IoStarOutline,
-  IoStar,
-  IoOpenOutline,
-} from 'react-icons/io5'
 import { useEffect, useState } from 'react'
-import { Label } from '@/components/ui/label'
-import { Input } from '@/components/ui/input'
 import { Button } from '@/components/ui/button'
 import { useListsQueries } from '../../../hooks/useListsQueries'
-import { Textarea } from '@/components/ui/textarea'
-import Location from './location'
-import Rating from './rating'
 import Display from './display'
 import Editor from './editor'
+
 interface SpotProps {
   spot: Spot
 }
-
 export default function Spot({ spot }: SpotProps) {
   const { updateSpotMutation, deleteSpotMutation } =
     useListsQueries()
   const [confirmDelete, setConfirmDelete] = useState(false)
   const [open, setOpen] = useState(false)
   const [name, setName] = useState(spot.name)
-  const [locationName, setLocationName] = useState(
-    spot.locationName ?? '',
-  )
-  const [locationAddress, setLocationAddress] = useState(
-    spot.locationAddress ?? '',
-  )
-  const [locationLink, setLocationLink] = useState(
-    spot.locationLink ?? '',
+  const [location, setLocation] = useState(
+    spot.location ?? {
+      name: '',
+      address: '',
+      link: '',
+      lat: 0,
+      lng: 0,
+    },
   )
   const [visited, setVisited] = useState(
     spot.visited ?? false,
@@ -86,24 +75,28 @@ export default function Spot({ spot }: SpotProps) {
           open={() => setOpen(true)}
         />
       </DialogTrigger>
-      <DialogContent className="sm:max-w-[425px]">
+      <DialogContent
+        className="sm:max-w-[425px]"
+        onInteractOutside={(e) => {
+          e.preventDefault()
+        }}
+        onPointerDownOutside={(e) => {
+          e.preventDefault()
+        }}
+      >
         <DialogHeader>
           <DialogTitle>Edit Spot</DialogTitle>
         </DialogHeader>
         <Editor
           {...{
             name,
-            locationName,
-            locationAddress,
-            locationLink,
+            location,
             visited,
             rating,
             notes,
             tags,
             setName,
-            setLocationName,
-            setLocationAddress,
-            setLocationLink,
+            setLocation,
             setVisited,
             setRating,
             setNotes,
@@ -147,9 +140,7 @@ export default function Spot({ spot }: SpotProps) {
               updateSpotMutation.mutate({
                 id: spot.id,
                 name: name,
-                locationName: locationName,
-                locationAddress: locationAddress,
-                locationLink: locationLink,
+                location,
                 visited: visited,
                 rating: rating,
                 listId: spot.listId,

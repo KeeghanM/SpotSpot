@@ -3,7 +3,7 @@ import { useListsQueries } from '../../hooks/useListsQueries'
 import { useListsStore } from '../../stores/lists'
 import List from './list'
 
-export default function Viewer() {
+export default function ListViewer() {
   const { lists } = useListsStore()
   const { listsQuery } = useListsQueries()
 
