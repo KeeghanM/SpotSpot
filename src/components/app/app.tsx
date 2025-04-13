@@ -28,7 +28,7 @@ export default function SpotSpot() {
           <Filters />
           {mode === 'list' ? <ListViewer /> : <MapViewer />}
         </div>
-        {/* <MapViewToggle /> */}
+        <MapViewToggle />
       </QueryClientProvider>
     </APIProvider>
   )

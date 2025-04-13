@@ -3,8 +3,12 @@ import { useFiltersStore } from '../../stores/filters'
 import { authClient } from '@/lib/auth/client-react'
 import { Label } from '@/components/ui/label'
 import { Switch } from '@/components/ui/switch'
+import { useAppStore } from '../../stores/app'
+import { useListsStore } from '../../stores/lists'
 
 export default function Filters() {
+  const { mode } = useAppStore()
+  const { lists, selectList, currentList } = useListsStore()
   const {
     tags,
     setSelectedTags,
@@ -16,6 +20,33 @@ export default function Filters() {
   return (
     <div className="bg-accent/20 shadow">
       <div className="mx-auto flex w-lg max-w-full flex-row items-center justify-center gap-2 p-4">
+        {mode === 'map' && (
+          <Select
+            defaultValue={
+              currentList
+                ? {
+                    label: currentList.name,
+                    value: currentList.id,
+                  }
+                : undefined
+            }
+            options={lists.map((list) => ({
+              label: list.name,
+              value: list.id,
+            }))}
+            onChange={(selectedList) => {
+              if (!selectedList) return
+              const list = lists.find(
+                (list) => list.id === selectedList.value,
+              )
+              if (list) {
+                selectList(list)
+              }
+            }}
+            placeholder="Select a list"
+            className="w-full md:w-1/2"
+          />
+        )}
         <Select
           options={tags.map((tag) => ({
             label: tag.name,

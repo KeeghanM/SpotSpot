@@ -2,23 +2,20 @@ import {
   IoCheckmarkDoneCircle,
   IoOpenOutline,
 } from 'react-icons/io5'
-import Rating from './rating'
+import Rating from '../spot/rating'
 import type { Spot } from '@/components/app/stores/lists'
 
-interface DisplayProps {
+interface SpotListItemProps {
   spot: Spot
-  open: () => void
 }
-export default function Display({
+export default function SpotListItem({
   spot,
-  open,
-}: DisplayProps) {
+}: SpotListItemProps) {
   return (
     <div
-      className={`cursor-pointer rounded border p-4 ${
+      className={`rounded border p-4 ${
         spot.visited ? 'bg-accent' : ''
       }`}
-      onClick={open}
     >
       <div className="flex items-center gap-2">
         <p>{spot.name}</p>
@@ -31,7 +28,7 @@ export default function Display({
         <a
           href={spot.location.link}
           target="_blank"
-          className="text-primary mt-4 text-sm hover:underline"
+          className="text-primary mt-4 block w-fit text-sm hover:underline"
         >
           {spot.location.name.length > 30
             ? spot.location.name.substring(0, 29) + '...'

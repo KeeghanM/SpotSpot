@@ -3,10 +3,11 @@ import {
   useListsStore,
   type ListWithSpots,
 } from '../../stores/lists'
-import Spot from './spot'
+import Spot from '../spot'
 import { useListsQueries } from '../../hooks/useListsQueries'
 import { useState } from 'react'
 import { useFiltersStore } from '../../stores/filters'
+import SpotListItem from './spot-list-item'
 
 interface ListProps {
   list: ListWithSpots
@@ -87,7 +88,9 @@ export default function List({ list }: ListProps) {
                 <Spot
                   spot={spot}
                   key={'spot-' + spot.id}
-                />
+                >
+                  <SpotListItem spot={spot} />
+                </Spot>
               ))}
           </div>
         ) : (

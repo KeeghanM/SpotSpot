@@ -8,17 +8,20 @@ import {
   DialogTrigger,
 } from '@/components/ui/dialog'
 
-import type { Spot } from '../../../stores/lists'
+import type { Spot } from '../../stores/lists'
 import { useEffect, useState } from 'react'
 import { Button } from '@/components/ui/button'
-import { useListsQueries } from '../../../hooks/useListsQueries'
-import Display from './display'
+import { useListsQueries } from '../../hooks/useListsQueries'
 import Editor from './editor'
 
 interface SpotProps {
   spot: Spot
+  children: React.ReactNode
 }
-export default function Spot({ spot }: SpotProps) {
+export default function Spot({
+  spot,
+  children,
+}: SpotProps) {
   const { updateSpotMutation, deleteSpotMutation } =
     useListsQueries()
   const [confirmDelete, setConfirmDelete] = useState(false)
@@ -69,11 +72,8 @@ export default function Spot({ spot }: SpotProps) {
       open={open}
       onOpenChange={setOpen}
     >
-      <DialogTrigger asChild>
-        <Display
-          spot={spot}
-          open={() => setOpen(true)}
-        />
+      <DialogTrigger className="cursor-pointer">
+        {children}
       </DialogTrigger>
       <DialogContent
         className="sm:max-w-[425px]"
