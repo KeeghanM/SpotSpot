@@ -1,0 +1,15 @@
+{
+  "name": "spotspot",
+  "version": "1.0.0",
+  "scripts": {
+    "dev": "turbo run dev"
+  },
+  "devDependencies": {
+    "turbo": "^2.5.3"
+  },
+  "workspaces": [
+    "apps/*",
+    "packages/*"
+  ],
+  "packageManager": "npm@10.9.2"
+}

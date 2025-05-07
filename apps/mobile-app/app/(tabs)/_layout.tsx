@@ -40,6 +40,22 @@ export default function TabLayout() {
           tabBarIcon: ({ color }) => <IconSymbol size={28} name="paperplane.fill" color={color} />,
         }}
       />
+      <Tabs.Screen
+        name="spotspot-tab"
+        options={{
+          title: 'SpotSpot',
+          tabBarIcon: ({ color }) => <IconSymbol size={28} name="map.fill" color={color} />,
+        }}
+        listeners={{
+          tabPress: (e) => {
+            // Prevent default behavior
+            e.preventDefault();
+            // Navigate to the spotspot screen
+            const { navigation } = e.target;
+            navigation.navigate('spotspot');
+          },
+        }}
+      />
     </Tabs>
   );
 }
