@@ -1,12 +1,12 @@
 import { Button } from '@/components/ui/button'
+import { useState } from 'react'
+import { useListsQueries } from '../../hooks/useListsQueries'
+import { useFiltersStore } from '../../stores/filters'
 import {
   useListsStore,
   type ListWithSpots,
 } from '../../stores/lists'
 import Spot from '../spot'
-import { useListsQueries } from '../../hooks/useListsQueries'
-import { useState } from 'react'
-import { useFiltersStore } from '../../stores/filters'
 import SpotListItem from './spot-list-item'
 
 interface ListProps {
@@ -31,7 +31,7 @@ export default function List({ list }: ListProps) {
   return (
     <div className="mx-auto w-lg max-w-full">
       <div
-        className={`flex cursor-pointer justify-between rounded border p-4 hover:bg-blue-100 ${currentList?.id === list.id ? 'bg-blue-100' : ''}`}
+        className={`flex cursor-pointer justify-between rounded-2xl border p-4 hover:bg-orange-100 ${currentList?.id === list.id ? 'bg-orange-100' : ''}`}
         onClick={() => {
           setConfirmDelete(false)
           selectList(

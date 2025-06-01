@@ -5,6 +5,7 @@ interface Props {
 
 const { title } = Astro.props
 
+import Posthog from '@/components/posthog.astro'
 import '@/styles/global.css'
 ---
 
@@ -26,6 +27,7 @@ import '@/styles/global.css'
       content={Astro.generator}
     />
     <title>{title}</title>
+    <Posthog />
   </head>
   <body>
     <slot />

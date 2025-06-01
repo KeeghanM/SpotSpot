@@ -1,9 +1,9 @@
+import type { Spot } from '@/components/app/stores/lists'
 import {
   IoCheckmarkDoneCircle,
   IoOpenOutline,
 } from 'react-icons/io5'
 import Rating from '../spot/rating'
-import type { Spot } from '@/components/app/stores/lists'
 
 interface SpotListItemProps {
   spot: Spot
@@ -13,22 +13,30 @@ export default function SpotListItem({
 }: SpotListItemProps) {
   return (
     <div
-      className={`rounded border p-4 ${
-        spot.visited ? 'bg-accent' : ''
+      className={`flex flex-col gap-2 rounded-2xl border-2 px-4 py-2 ${
+        spot.visited
+          ? 'border-pink-200 bg-gradient-to-r from-orange-200 to-pink-200'
+          : 'border-pink-100 bg-white hover:border-pink-200'
       }`}
     >
       <div className="flex items-center gap-2">
-        <p>{spot.name}</p>
-        {spot.visited && <IoCheckmarkDoneCircle />}
+        <p className="font-medium text-pink-800">
+          {spot.name}
+        </p>
+        {spot.visited && (
+          <IoCheckmarkDoneCircle className="text-xl text-purple-500" />
+        )}
       </div>
       {spot.rating && spot.rating > 0 ? (
-        <Rating rating={spot.rating} />
+        <div>
+          <Rating rating={spot.rating} />
+        </div>
       ) : null}
       {spot.location?.link && spot.location?.name && (
         <a
           href={spot.location.link}
           target="_blank"
-          className="text-primary mt-4 block w-fit text-sm hover:underline"
+          className="block w-fit text-sm font-medium text-purple-600 transition-colors duration-200 hover:text-purple-700 hover:underline"
         >
           {spot.location.name.length > 30
             ? spot.location.name.substring(0, 29) + '...'
