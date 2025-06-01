@@ -10,7 +10,7 @@ import { defineConfig } from 'astro/config'
 // https://astro.build/config
 export default defineConfig({
   integrations: [react(), partytown(), icon(), compress()],
-  output: 'static',
+  output: 'server',
   adapter: node({ mode: 'standalone' }),
   vite: { plugins: [tailwindcss()] },
 })
