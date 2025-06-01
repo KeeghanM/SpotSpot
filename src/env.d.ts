@@ -6,6 +6,8 @@ interface ImportMetaEnv {
   readonly TURSO_DATABASE_URL: string
   readonly TURSO_AUTH_TOKEN: string
   readonly PUBLIC_GOOGLE_PLACES_API_KEY: string
+  readonly PUBLIC_POSTHOG_KEY: string
+  readonly PUBLIC_POSTHOG_KEY: string
 }
 
 declare namespace App {

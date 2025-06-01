@@ -1,10 +1,21 @@
 import { Button } from '@/components/ui/button'
 import { Skeleton } from '@/components/ui/skeleton'
 import { authClient } from '@/lib/auth/client-react'
+import { usePostHog } from 'posthog-js/react'
+import { useEffect } from 'react'
 
 export default function Header() {
   const { data: session, isPending } =
     authClient.useSession()
+  const posthog = usePostHog()
+
+  useEffect(() => {
+    if (session?.user) {
+      posthog?.identify(session.user.id, {
+        email: session.user.email,
+      })
+    }
+  }, [posthog, session?.user])
 
   return (
     <div className="border-b border-pink-100 bg-gradient-to-r from-white via-pink-50 to-white shadow-sm">

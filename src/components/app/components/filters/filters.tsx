@@ -1,6 +1,7 @@
 import { Label } from '@/components/ui/label'
 import { Switch } from '@/components/ui/switch'
 import { authClient } from '@/lib/auth/client-react'
+import { usePostHog } from 'posthog-js/react'
 import type { GroupBase, StylesConfig } from 'react-select'
 import Select from 'react-select'
 import { useAppStore } from '../../stores/app'
@@ -95,6 +96,7 @@ export default function Filters({
 }: {
   compact?: boolean
 }) {
+  const posthog = usePostHog()
   const { mode } = useAppStore()
   const { lists, selectList, currentList } = useListsStore()
   const {
@@ -102,8 +104,17 @@ export default function Filters({
     setSelectedTags,
     showVisited,
     setShowVisited,
+    selectedTags,
   } = useFiltersStore()
   const { data: userData } = authClient.useSession()
+
+  const trackFilter = () =>
+    posthog?.capture('filters_applied', {
+      mode,
+      list: currentList ? currentList.name : 'none',
+      tags: selectedTags.map((tag) => tag.name).join(', '),
+      showVisited,
+    })
 
   return (
     <div
@@ -122,6 +133,7 @@ export default function Filters({
       >
         {mode === 'map' && (
           <Select
+            menuPlacement="top"
             defaultValue={
               currentList
                 ? {
@@ -149,11 +161,13 @@ export default function Filters({
           />
         )}
         <Select
+          menuPlacement="top"
           options={tags.map((tag) => ({
             label: tag.name,
             value: tag.id,
           }))}
           onChange={(selectedTags) => {
+            trackFilter()
             const newTags = selectedTags.map((tag) => {
               return {
                 id: Number(tag.value),
@@ -183,13 +197,14 @@ export default function Filters({
             }
             htmlFor="showVisited"
           >
-            Show Visited ✨
+            Show Visited
           </Label>
           <div>
             <Switch
               id="showVisited"
               checked={showVisited}
               onCheckedChange={(checked) => {
+                trackFilter()
                 setShowVisited(checked)
               }}
             />

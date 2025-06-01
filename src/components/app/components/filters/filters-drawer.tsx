@@ -22,7 +22,7 @@ export default function FiltersDrawer() {
         open={open}
         onOpenChange={setOpen}
       >
-        <DialogContent className="z-100 w-full overflow-hidden rounded-2xl bg-white p-0">
+        <DialogContent className="z-100 w-full rounded-2xl bg-white p-0">
           <div className="mx-auto max-w-md bg-white px-4 py-2">
             <div className="mb-4 flex items-center justify-between">
               <h2 className="text-xl font-semibold text-pink-700">

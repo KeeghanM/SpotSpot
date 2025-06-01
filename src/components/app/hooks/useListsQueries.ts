@@ -1,19 +1,20 @@
+import { authClient } from '@/lib/auth/client-react'
 import {
-  useQuery,
   useMutation,
+  useQuery,
   useQueryClient,
 } from '@tanstack/react-query'
-import {
-  useListsStore,
-  type ListWithSpots,
-  type Spot,
-} from '../stores/lists'
+import { usePostHog } from 'posthog-js/react'
 import { useEffect } from 'react'
 import {
   useFiltersStore,
   type Tag,
 } from '../stores/filters'
-import { authClient } from '@/lib/auth/client-react'
+import {
+  useListsStore,
+  type ListWithSpots,
+  type Spot,
+} from '../stores/lists'
 
 const fetchLists = async (): Promise<ListWithSpots[]> => {
   const response = await fetch('/api/lists')
@@ -24,6 +25,7 @@ const fetchTags = async (): Promise<Tag[]> => {
   return response.json()
 }
 export function useListsQueries() {
+  const posthog = usePostHog()
   const { data: userData } = authClient.useSession()
   const queryClient = useQueryClient()
   const {
@@ -77,6 +79,10 @@ export function useListsQueries() {
         body: JSON.stringify({ newList }),
         headers: { 'Content-Type': 'application/json' },
       })
+
+      posthog?.capture('list_created', {
+        name: newList.name,
+      })
     },
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ['lists'] })
@@ -92,6 +98,11 @@ export function useListsQueries() {
         method: 'PUT',
         body: JSON.stringify({ listToUpdate: list }),
         headers: { 'Content-Type': 'application/json' },
+      })
+
+      posthog?.capture('list_updated', {
+        id: list.id,
+        name: list.name,
       })
     },
     onSuccess: () => {
@@ -109,6 +120,8 @@ export function useListsQueries() {
         body: JSON.stringify({ id }),
         headers: { 'Content-Type': 'application/json' },
       })
+
+      posthog?.capture('list_deleted', { id })
     },
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ['lists'] })
@@ -123,6 +136,10 @@ export function useListsQueries() {
         method: 'POST',
         body: JSON.stringify({ newSpot }),
         headers: { 'Content-Type': 'application/json' },
+      })
+      posthog?.capture('spot_created', {
+        listId: newSpot.listId,
+        spot: newSpot,
       })
     },
     onSuccess: () => {
@@ -139,6 +156,10 @@ export function useListsQueries() {
         body: JSON.stringify({ spotToUpdate: spot }),
         headers: { 'Content-Type': 'application/json' },
       })
+      posthog?.capture('spot_updated', {
+        listId: spot.listId,
+        spot,
+      })
     },
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ['spots'] })
@@ -154,6 +175,10 @@ export function useListsQueries() {
         method: 'DELETE',
         body: JSON.stringify({ spotId: spot.id }),
         headers: { 'Content-Type': 'application/json' },
+      })
+      posthog?.capture('spot_deleted', {
+        spotId: spot.id,
+        listId: spot.listId,
       })
     },
     onSuccess: () => {
