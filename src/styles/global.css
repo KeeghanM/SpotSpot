@@ -1,4 +1,4 @@
-@import url('https://fonts.googleapis.com/css?family=DM%20Serif%20Display:700|Quicksand:400');
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Poppins:wght@400;500;600;700&family=Quicksand:wght@300;400;500;600;700&family=DM+Serif+Display:wght@400&display=swap');
 
 @import 'tailwindcss';
 @import 'tw-animate-css';
@@ -6,48 +6,108 @@
 @custom-variant dark (&:is(.dark *));
 
 :root {
-  --background: hsl(218, 80%, 96%);
-  --foreground: hsl(224, 79%, 4%);
-  --card: hsl(218, 80%, 96%);
-  --card-foreground: hsl(224, 79%, 4%);
-  --popover: hsl(218, 80%, 96%);
-  --popover-foreground: hsl(224, 79%, 4%);
-  --primary: hsl(225, 83%, 55%);
-  --primary-foreground: hsl(218, 80%, 96%);
-  --secondary: hsl(2, 84%, 74%);
-  --secondary-foreground: hsl(224, 79%, 4%);
-  --muted: hsl(218, 80%, 20%);
-  --muted-foreground: hsl(224, 79%, 70%);
-  --accent: hsl(46, 83%, 61%);
-  --accent-foreground: hsl(224, 79%, 4%);
-  --destructive: hsl(0, 85%, 60%);
-  --destructive-foreground: hsl(224, 79%, 4%);
-  --border: hsl(218, 80%, 20%);
-  --input: hsl(218, 80%, 20%);
-  --ring: hsl(46, 83%, 40%);
-  --radius: 0.5rem;
+  /* Base colors - clean white with soft pink touches */
+  --background: hsl(0, 0%, 100%); /* Pure white */
+  --foreground: hsl(
+    340,
+    15%,
+    25%
+  ); /* Soft dark gray with pink undertone */
+  --card: hsl(0, 0%, 100%); /* Pure white cards */
+  --card-foreground: hsl(340, 15%, 25%);
+  --popover: hsl(0, 0%, 100%);
+  --popover-foreground: hsl(340, 15%, 25%);
+
+  /* Your custom brand colors */
+  --primary: hsl(24, 95%, 53%); /* #f97316 - Orange */
+  --primary-foreground: hsl(0, 0%, 100%);
+  --secondary: hsl(296, 85%, 58%); /* #de3aed - Purple */
+  --secondary-foreground: hsl(0, 0%, 100%);
+
+  /* Light pink accent colors for feminine touch */
+  --muted: hsl(
+    330,
+    40%,
+    96%
+  ); /* Very light pink background */
+  --muted-foreground: hsl(
+    340,
+    15%,
+    50%
+  ); /* Muted pink-gray text */
+  --accent: hsl(330, 30%, 94%); /* Soft pink accent */
+  --accent-foreground: hsl(
+    340,
+    20%,
+    30%
+  ); /* Darker pink text */
+
+  /* Semantic colors with pink undertones */
+  --destructive: hsl(
+    350,
+    70%,
+    55%
+  ); /* Pink-red for errors */
+  --destructive-foreground: hsl(0, 0%, 98%);
+
+  /* Soft borders and inputs */
+  --border: hsl(330, 25%, 90%); /* Light pink-gray border */
+  --input: hsl(
+    330,
+    30%,
+    96%
+  ); /* Very light pink input background */
+  --ring: hsl(
+    296,
+    85%,
+    58%
+  ); /* Purple focus rings for fun accent */
+
+  /* Softer rounded corners for feminine feel */
+  --radius: 1rem;
 }
 
 .dark {
-  --background: hsl(218, 80%, 4%);
-  --foreground: hsl(225, 80%, 96%);
-  --card: hsl(218, 80%, 4%);
-  --card-foreground: hsl(225, 80%, 96%);
-  --popover: hsl(218, 80%, 4%);
-  --popover-foreground: hsl(225, 80%, 96%);
-  --primary: hsl(225, 83%, 45%);
-  --primary-foreground: hsl(225, 80%, 96%);
-  --secondary: hsl(2, 83%, 26%);
-  --secondary-foreground: hsl(225, 80%, 96%);
-  --muted: hsl(218, 80%, 80%);
-  --muted-foreground: hsl(225, 80%, 96%);
-  --accent: hsl(46, 83%, 39%);
-  --accent-foreground: hsl(218, 80%, 4%);
-  --destructive: hsl(0, 62%, 30%);
-  --destructive-foreground: hsl(225, 80%, 10%);
-  --border: hsl(218, 80%, 60%);
-  --input: hsl(218, 80%, 80%);
-  --ring: hsl(46, 83%, 60%);
+  /* Soft dark theme with pink undertones */
+  --background: hsl(
+    340,
+    10%,
+    8%
+  ); /* Dark with slight pink warmth */
+  --foreground: hsl(330, 20%, 92%); /* Soft pink-white */
+  --card: hsl(
+    340,
+    8%,
+    12%
+  ); /* Dark cards with pink undertone */
+  --card-foreground: hsl(330, 20%, 92%);
+  --popover: hsl(340, 8%, 12%);
+  --popover-foreground: hsl(330, 20%, 92%);
+
+  /* Brand colors for dark mode */
+  --primary: hsl(24, 95%, 53%); /* Same orange */
+  --primary-foreground: hsl(0, 0%, 100%);
+  --secondary: hsl(296, 85%, 58%); /* Same purple */
+  --secondary-foreground: hsl(0, 0%, 100%);
+
+  /* Dark theme with pink touches */
+  --muted: hsl(340, 8%, 18%); /* Dark pink-gray */
+  --muted-foreground: hsl(
+    330,
+    15%,
+    65%
+  ); /* Muted pink text */
+  --accent: hsl(340, 8%, 18%);
+  --accent-foreground: hsl(330, 20%, 92%);
+
+  /* Dark theme semantic colors */
+  --destructive: hsl(350, 50%, 45%);
+  --destructive-foreground: hsl(330, 20%, 92%);
+
+  /* Dark theme borders with pink undertone */
+  --border: hsl(340, 8%, 18%);
+  --input: hsl(340, 8%, 18%);
+  --ring: hsl(296, 85%, 58%); /* Purple focus rings */
 }
 
 @theme inline {
@@ -98,12 +158,20 @@
   }
   body {
     @apply bg-background text-foreground;
+    /* Soft gradient background for subtle elegance */
+    background: linear-gradient(
+      135deg,
+      hsl(0, 0%, 100%) 0%,
+      hsl(330, 40%, 98%) 50%,
+      hsl(0, 0%, 100%) 100%
+    );
   }
 }
 
 body {
-  font-family: 'Quicksand';
+  font-family: 'Quicksand', 'Inter', sans-serif;
   font-weight: 400;
+  letter-spacing: 0.01em;
 }
 
 h1,
@@ -111,8 +179,59 @@ h2,
 h3,
 h4,
 h5 {
-  font-family: 'DM Serif Display';
-  font-weight: 700;
+  font-family: 'Quicksand', sans-serif;
+  font-weight: 600;
+  letter-spacing: -0.02em;
+  color: hsl(340, 20%, 30%);
+}
+
+/* Feminine touches for interactive elements */
+.btn-primary {
+  background: linear-gradient(
+    135deg,
+    var(--primary) 0%,
+    hsl(20, 90%, 60%) 100%
+  );
+  box-shadow: 0 4px 20px hsla(24, 95%, 53%, 0.3);
+  transition: all 0.3s ease;
+}
+
+.btn-primary:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 8px 25px hsla(24, 95%, 53%, 0.4);
+}
+
+.btn-secondary {
+  background: linear-gradient(
+    135deg,
+    var(--secondary) 0%,
+    hsl(300, 80%, 65%) 100%
+  );
+  box-shadow: 0 4px 20px hsla(296, 85%, 58%, 0.3);
+  transition: all 0.3s ease;
+}
+
+.btn-secondary:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 8px 25px hsla(296, 85%, 58%, 0.4);
+}
+
+/* Soft card styling */
+.card-feminine {
+  background: linear-gradient(
+    145deg,
+    hsl(0, 0%, 100%) 0%,
+    hsl(330, 30%, 98%) 100%
+  );
+  border: 1px solid hsl(330, 25%, 92%);
+  border-radius: 1.25rem;
+  box-shadow: 0 4px 20px hsla(330, 40%, 85%, 0.15);
+  transition: all 0.3s ease;
+}
+
+.card-feminine:hover {
+  transform: translateY(-4px);
+  box-shadow: 0 12px 30px hsla(330, 40%, 80%, 0.25);
 }
 
 html {
