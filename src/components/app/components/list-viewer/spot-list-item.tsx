@@ -13,13 +13,13 @@ export default function SpotListItem({
 }: SpotListItemProps) {
   return (
     <div
-      className={`rounded-2xl border-2 p-6 transition-all duration-300 hover:-translate-y-1 hover:shadow-lg ${
+      className={`flex flex-col gap-2 rounded-2xl border-2 px-4 py-2 transition-all duration-300 hover:shadow-lg ${
         spot.visited
           ? 'border-pink-200 bg-gradient-to-r from-pink-100 to-purple-100 shadow-md'
           : 'border-pink-100 bg-white hover:border-pink-200'
       }`}
     >
-      <div className="flex items-center gap-3">
+      <div className="flex items-center gap-2">
         <p className="font-medium text-pink-800">
           {spot.name}
         </p>
@@ -28,7 +28,7 @@ export default function SpotListItem({
         )}
       </div>
       {spot.rating && spot.rating > 0 ? (
-        <div className="mt-3">
+        <div>
           <Rating rating={spot.rating} />
         </div>
       ) : null}
@@ -36,7 +36,7 @@ export default function SpotListItem({
         <a
           href={spot.location.link}
           target="_blank"
-          className="mt-4 block w-fit text-sm font-medium text-purple-600 transition-colors duration-200 hover:text-purple-700 hover:underline"
+          className="block w-fit text-sm font-medium text-purple-600 transition-colors duration-200 hover:text-purple-700 hover:underline"
         >
           {spot.location.name.length > 30
             ? spot.location.name.substring(0, 29) + '...'
