@@ -31,7 +31,7 @@ export default function List({ list }: ListProps) {
   return (
     <div className="mx-auto w-lg max-w-full">
       <div
-        className={`flex cursor-pointer justify-between rounded-2xl border p-4 hover:bg-blue-100 ${currentList?.id === list.id ? 'bg-blue-100' : ''}`}
+        className={`flex cursor-pointer justify-between rounded-2xl border p-4 hover:bg-orange-100 ${currentList?.id === list.id ? 'bg-orange-100' : ''}`}
         onClick={() => {
           setConfirmDelete(false)
           selectList(

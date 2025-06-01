@@ -13,9 +13,9 @@ export default function SpotListItem({
 }: SpotListItemProps) {
   return (
     <div
-      className={`flex flex-col gap-2 rounded-2xl border-2 px-4 py-2 transition-all duration-300 hover:shadow-lg ${
+      className={`flex flex-col gap-2 rounded-2xl border-2 px-4 py-2 ${
         spot.visited
-          ? 'border-pink-200 bg-gradient-to-r from-pink-100 to-purple-100 shadow-md'
+          ? 'border-pink-200 bg-gradient-to-r from-orange-200 to-pink-200'
           : 'border-pink-100 bg-white hover:border-pink-200'
       }`}
     >
