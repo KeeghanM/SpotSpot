@@ -97,7 +97,41 @@ export function useListsQueries() {
         spot: newSpot,
       })
     },
-    onSuccess: () => {
+    onMutate: async (newSpot) => {
+      await queryClient.cancelQueries({
+        queryKey: ['lists'],
+      })
+      const previousLists = queryClient.getQueryData<
+        TListWithSpots[]
+      >(['lists'])
+      queryClient.setQueryData<TListWithSpots[]>(
+        ['lists'],
+        (oldLists) => {
+          if (!oldLists) return oldLists
+          return oldLists.map((list) =>
+            list.id === newSpot.listId
+              ? {
+                  ...list,
+                  spots: [
+                    ...list.spots,
+                    { ...newSpot, id: Math.random() },
+                  ],
+                }
+              : list,
+          )
+        },
+      )
+      return { previousLists }
+    },
+    onError: (err, newSpot, context) => {
+      if (context?.previousLists) {
+        queryClient.setQueryData(
+          ['lists'],
+          context.previousLists,
+        )
+      }
+    },
+    onSettled: () => {
       queryClient.invalidateQueries({ queryKey: ['lists'] })
     },
   })
@@ -114,7 +148,40 @@ export function useListsQueries() {
         spot,
       })
     },
-    onSuccess: () => {
+    onMutate: async (spot) => {
+      await queryClient.cancelQueries({
+        queryKey: ['lists'],
+      })
+      const previousLists = queryClient.getQueryData<
+        TListWithSpots[]
+      >(['lists'])
+      queryClient.setQueryData<TListWithSpots[]>(
+        ['lists'],
+        (oldLists) => {
+          if (!oldLists) return oldLists
+          return oldLists.map((list) =>
+            list.id === spot.listId
+              ? {
+                  ...list,
+                  spots: list.spots.map((s) =>
+                    s.id === spot.id ? spot : s,
+                  ),
+                }
+              : list,
+          )
+        },
+      )
+      return { previousLists }
+    },
+    onError: (err, spot, context) => {
+      if (context?.previousLists) {
+        queryClient.setQueryData(
+          ['lists'],
+          context.previousLists,
+        )
+      }
+    },
+    onSettled: () => {
       queryClient.invalidateQueries({ queryKey: ['lists'] })
       queryClient.invalidateQueries({ queryKey: ['tags'] })
     },
@@ -132,7 +199,40 @@ export function useListsQueries() {
         listId: spot.listId,
       })
     },
-    onSuccess: () => {
+    onMutate: async (spot) => {
+      await queryClient.cancelQueries({
+        queryKey: ['lists'],
+      })
+      const previousLists = queryClient.getQueryData<
+        TListWithSpots[]
+      >(['lists'])
+      queryClient.setQueryData<TListWithSpots[]>(
+        ['lists'],
+        (oldLists) => {
+          if (!oldLists) return oldLists
+          return oldLists.map((list) =>
+            list.id === spot.listId
+              ? {
+                  ...list,
+                  spots: list.spots.filter(
+                    (s) => s.id !== spot.id,
+                  ),
+                }
+              : list,
+          )
+        },
+      )
+      return { previousLists }
+    },
+    onError: (err, spot, context) => {
+      if (context?.previousLists) {
+        queryClient.setQueryData(
+          ['lists'],
+          context.previousLists,
+        )
+      }
+    },
+    onSettled: () => {
       queryClient.invalidateQueries({ queryKey: ['lists'] })
       queryClient.invalidateQueries({ queryKey: ['tags'] })
     },
