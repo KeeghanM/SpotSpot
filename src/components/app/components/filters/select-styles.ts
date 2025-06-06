@@ -1,10 +1,10 @@
 import type { GroupBase, StylesConfig } from 'react-select'
-import type { OptionType } from './filters'
+import type { IOptionType } from './filters'
 
 export const selectStyles: StylesConfig<
-  OptionType,
+  IOptionType,
   boolean,
-  GroupBase<OptionType>
+  GroupBase<IOptionType>
 > = {
   control: (base, state) => ({
     ...base,

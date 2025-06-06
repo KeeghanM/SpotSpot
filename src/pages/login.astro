@@ -11,10 +11,6 @@ import {
 } from '@/components/ui/card'
 import { Input } from '@/components/ui/input'
 import { Label } from '@/components/ui/label'
-import {
-  Alert,
-  AlertDescription,
-} from '@/components/ui/alert'
 
 // Check if user is already logged in
 if (Astro.locals.session) {
@@ -145,7 +141,7 @@ if (Astro.locals.session) {
           },
         },
       })
-    } catch (error) {
+    } catch (_error) {
       showError(
         'An error occurred during login. Please try again.',
       )

@@ -1,18 +1,18 @@
 import { Button } from '@/components/ui/button'
-import { useState } from 'react'
+import React, { useState } from 'react'
 import { useListsQueries } from '../../hooks/useListsQueries'
 import { useFiltersStore } from '../../stores/filters'
 import Spot from '../spot'
 import SpotListItem from './spot-list-item'
 import {
   useAppStore,
-  type ListWithSpots,
+  type TListWithSpots,
 } from '../../stores/app'
 
-interface ListProps {
-  list: ListWithSpots
+interface IListProps {
+  list: TListWithSpots
 }
-export default function List({ list }: ListProps) {
+export default function List({ list }: IListProps) {
   const { currentList, setCurrentList } = useAppStore()
   const { selectedTags, showVisited } = useFiltersStore()
   const { deleteListMutation } = useListsQueries()
@@ -32,11 +32,21 @@ export default function List({ list }: ListProps) {
     <div className="mx-auto w-lg max-w-full">
       <div
         className={`flex cursor-pointer justify-between rounded-2xl border p-4 hover:bg-orange-100 ${currentList?.id === list.id ? 'bg-orange-100' : ''}`}
+        role="button"
+        tabIndex={0}
         onClick={() => {
           setConfirmDelete(false)
           setCurrentList(
             currentList?.id === list.id ? null : list,
           )
+        }}
+        onKeyDown={(e) => {
+          if (e.key === 'Enter' || e.key === ' ') {
+            setConfirmDelete(false)
+            setCurrentList(
+              currentList?.id === list.id ? null : list,
+            )
+          }
         }}
       >
         <div className="">

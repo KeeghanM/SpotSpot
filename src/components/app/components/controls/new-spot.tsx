@@ -50,7 +50,7 @@ export default function NewList() {
           <DialogTitle>New Spot</DialogTitle>
           <DialogDescription className="text-foreground">
             Add a new spot to the list. Click create when
-            you're ready.
+            you&apos;re ready.
           </DialogDescription>
         </DialogHeader>
         <div className="grid gap-4 py-4">

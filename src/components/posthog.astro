@@ -61,12 +61,13 @@
       }),
       (e.__SV = 1))
   })(document, window.posthog || [])
+  // eslint-disable-next-line no-undef
   posthog.init(
     'phc_fA7z6Sp4Sv9TbsgNFQOF4Qujd4P9OOsbNc0x8gqMKnN',
     {
       api_host: 'https://eu.i.posthog.com',
       defaults: '2025-05-24',
-      person_profiles: 'identified_only', // or 'always' to create profiles for anonymous users as well
+      person_profiles: 'always',
     },
   )
 </script>

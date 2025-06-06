@@ -1,33 +1,33 @@
 import { create } from 'zustand'
 import { list } from '@/lib/db/schema'
-import type { Tag } from './filters'
-export type List = typeof list.$inferSelect
-export type Location = {
+import type { TTag } from './filters'
+export type TList = typeof list.$inferSelect
+export type TLocation = {
   name: string
   address: string
   link: string
   lat: number
   lng: number
 }
-export type Spot = {
+export type TSpot = {
   id: number
   name: string
   visited: boolean
   rating: number | null
   notes: string | null
-  tags: Tag[]
-  location: Location | null
+  tags: TTag[]
+  location: TLocation | null
   listId: number
 }
-export type ListWithSpots = List & { spots: Spot[] }
+export type TListWithSpots = TList & { spots: TSpot[] }
 
-interface AppState {
+interface IAppState {
   mode: 'list' | 'map'
   setMode: (mode: 'list' | 'map') => void
-  currentList: List | null
-  setCurrentList: (list: List | null) => void
+  currentList: TList | null
+  setCurrentList: (list: TList | null) => void
 }
-export const useAppStore = create<AppState>()((set) => ({
+export const useAppStore = create<IAppState>()((set) => ({
   mode: 'list',
   setMode: (mode) => set(() => ({ mode })),
   currentList: null,

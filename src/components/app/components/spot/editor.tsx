@@ -5,22 +5,22 @@ import { IoOpenOutline } from 'react-icons/io5'
 import Rating from './rating'
 import { Textarea } from '@/components/ui/textarea'
 import Tags from './tags'
-import type { Tag } from '@/components/app/stores/filters'
-import type { Location } from '../../stores/app'
+import type { TTag } from '@/components/app/stores/filters'
+import type { TLocation } from '../../stores/app'
 
-interface EditorProps {
+interface IEditorProps {
   name: string
-  location: Location | null
+  location: TLocation | null
   visited: boolean
   rating: number
   notes: string
-  tags: Tag[]
+  tags: TTag[]
   setName: (name: string) => void
-  setLocation: (location: Location) => void
+  setLocation: (location: TLocation) => void
   setVisited: (visited: boolean) => void
   setRating: (rating: number) => void
   setNotes: (notes: string) => void
-  setTags: (tags: Tag[]) => void
+  setTags: (tags: TTag[]) => void
 }
 export default function Editor({
   name,
@@ -35,7 +35,7 @@ export default function Editor({
   setRating,
   setNotes,
   setTags,
-}: EditorProps) {
+}: IEditorProps) {
   return (
     <div className="grid gap-4 py-4">
       <div className="grid grid-cols-4 items-center gap-4">
@@ -79,6 +79,7 @@ export default function Editor({
             <a
               href={location.link}
               target="_blank"
+              rel="noopener noreferrer"
               className="text-primary mt-4 text-sm hover:underline"
             >
               {location.name.length > 30

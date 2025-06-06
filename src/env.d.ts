@@ -1,3 +1,5 @@
+// eslint-disable no-unused-vars
+
 /// <reference path="../.astro/types.d.ts" />
 
 interface ImportMetaEnv {
@@ -7,7 +9,16 @@ interface ImportMetaEnv {
   readonly TURSO_AUTH_TOKEN: string
   readonly PUBLIC_GOOGLE_PLACES_API_KEY: string
   readonly PUBLIC_POSTHOG_KEY: string
-  readonly PUBLIC_POSTHOG_KEY: string
+  // Add Astro's built-in environment variables
+  readonly DEV: boolean
+  readonly PROD: boolean
+  readonly MODE: string
+  readonly BASE_URL: string
+  readonly SITE: string | undefined
+}
+
+interface ImportMeta {
+  readonly env: ImportMetaEnv
 }
 
 declare namespace App {

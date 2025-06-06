@@ -1,4 +1,4 @@
-import type { ListWithSpots } from '@/components/app/stores/app'
+import type { TListWithSpots } from '@/components/app/stores/app'
 import { clsx, type ClassValue } from 'clsx'
 import { twMerge } from 'tailwind-merge'
 
@@ -6,7 +6,7 @@ export function cn(...inputs: ClassValue[]) {
   return twMerge(clsx(inputs))
 }
 
-export function calculateCenter(lists: ListWithSpots[]): {
+export function calculateCenter(lists: TListWithSpots[]): {
   lat: number
   lng: number
 } {

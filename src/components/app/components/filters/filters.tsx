@@ -2,14 +2,13 @@ import { Label } from '@/components/ui/label'
 import { Switch } from '@/components/ui/switch'
 import { authClient } from '@/lib/auth/client-react'
 import { usePostHog } from 'posthog-js/react'
-import Select, { type SingleValue } from 'react-select'
 import { useAppStore } from '../../stores/app'
 import { useFiltersStore } from '../../stores/filters'
 import { selectStyles } from './select-styles'
 import { useListsQueries } from '../../hooks/useListsQueries'
-import MultiValue from 'node_modules/react-select/dist/declarations/src/components/MultiValue'
+import Select from 'react-select'
 
-export interface OptionType {
+export interface IOptionType {
   value: string | number
   label: string
 }

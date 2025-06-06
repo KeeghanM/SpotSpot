@@ -5,14 +5,14 @@ import {
 } from '@tanstack/react-query'
 import { usePostHog } from 'posthog-js/react'
 
-import type { Tag } from '../stores/filters'
-import type { ListWithSpots, Spot } from '../stores/app'
+import type { TTag } from '../stores/filters'
+import type { TListWithSpots, TSpot } from '../stores/app'
 
-const fetchLists = async (): Promise<ListWithSpots[]> => {
+const fetchLists = async (): Promise<TListWithSpots[]> => {
   const response = await fetch('/api/lists')
   return response.json()
 }
-const fetchTags = async (): Promise<Tag[]> => {
+const fetchTags = async (): Promise<TTag[]> => {
   const response = await fetch('/api/tags')
   return response.json()
 }
@@ -52,7 +52,7 @@ export function useListsQueries() {
   })
 
   const updateListMutation = useMutation({
-    mutationFn: async (list: ListWithSpots) => {
+    mutationFn: async (list: TListWithSpots) => {
       await fetch('/api/lists', {
         method: 'PUT',
         body: JSON.stringify({ listToUpdate: list }),
@@ -85,7 +85,7 @@ export function useListsQueries() {
   })
 
   const createSpotMutation = useMutation({
-    mutationFn: async (newSpot: Omit<Spot, 'id'>) => {
+    mutationFn: async (newSpot: Omit<TSpot, 'id'>) => {
       await fetch(`/api/lists/${newSpot.listId}/spots`, {
         method: 'POST',
         body: JSON.stringify({ newSpot }),
@@ -102,7 +102,7 @@ export function useListsQueries() {
   })
 
   const updateSpotMutation = useMutation({
-    mutationFn: async (spot: Spot) => {
+    mutationFn: async (spot: TSpot) => {
       await fetch(`/api/lists/${spot.listId}/spots`, {
         method: 'PUT',
         body: JSON.stringify({ spotToUpdate: spot }),
@@ -120,7 +120,7 @@ export function useListsQueries() {
   })
 
   const deleteSpotMutation = useMutation({
-    mutationFn: async (spot: Spot) => {
+    mutationFn: async (spot: TSpot) => {
       await fetch(`/api/lists/${spot.listId}/spots`, {
         method: 'DELETE',
         body: JSON.stringify({ spotId: spot.id }),
