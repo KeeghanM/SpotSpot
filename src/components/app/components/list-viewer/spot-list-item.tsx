@@ -1,16 +1,16 @@
-import type { Spot } from '@/components/app/stores/lists'
 import {
   IoCheckmarkDoneCircle,
   IoOpenOutline,
 } from 'react-icons/io5'
 import Rating from '../spot/rating'
+import type { TSpot } from '../../stores/app'
 
-interface SpotListItemProps {
-  spot: Spot
+interface ISpotListItemProps {
+  spot: TSpot
 }
 export default function SpotListItem({
   spot,
-}: SpotListItemProps) {
+}: ISpotListItemProps) {
   return (
     <div
       className={`flex flex-col gap-2 rounded-2xl border-2 px-4 py-2 ${
@@ -36,6 +36,7 @@ export default function SpotListItem({
         <a
           href={spot.location.link}
           target="_blank"
+          rel="noopener noreferrer"
           className="block w-fit text-sm font-medium text-purple-600 transition-colors duration-200 hover:text-purple-700 hover:underline"
         >
           {spot.location.name.length > 30

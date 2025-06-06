@@ -23,7 +23,7 @@ export default function SpotSpot() {
       apiKey={import.meta.env.PUBLIC_POSTHOG_KEY!}
       options={{
         capture_exceptions: true,
-        debug: process.env.NODE_ENV === 'development',
+        debug: import.meta.env.DEV,
       }}
     >
       <APIProvider

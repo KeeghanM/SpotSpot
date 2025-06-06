@@ -1,18 +1,18 @@
 import {
   useFiltersStore,
-  type Tag,
+  type TTag,
 } from '@/components/app/stores/filters'
 import { authClient } from '@/lib/auth/client-react'
 import CreatableSelect from 'react-select'
 
-interface TagsProps {
-  spotTags: Tag[]
-  setTags: (tags: Tag[]) => void
+interface ITagsProps {
+  spotTags: TTag[]
+  setTags: (tags: TTag[]) => void
 }
 export default function Tags({
   spotTags,
   setTags,
-}: TagsProps) {
+}: ITagsProps) {
   const { tags: availableTags } = useFiltersStore()
   const { data: userData } = authClient.useSession()
   return (

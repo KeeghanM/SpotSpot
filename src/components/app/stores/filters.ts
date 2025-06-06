@@ -1,17 +1,17 @@
 import type { tag } from '@/lib/db/schema'
 import { create } from 'zustand'
 
-export type Tag = typeof tag.$inferSelect
+export type TTag = typeof tag.$inferSelect
 
-interface FiltersState {
-  tags: Tag[]
-  setTags: (tags: Tag[]) => void
-  selectedTags: Tag[]
-  setSelectedTags: (tags: Tag[]) => void
+interface IFiltersState {
+  tags: TTag[]
+  setTags: (tags: TTag[]) => void
+  selectedTags: TTag[]
+  setSelectedTags: (tags: TTag[]) => void
   showVisited: boolean
   setShowVisited: (showVisited: boolean) => void
 }
-export const useFiltersStore = create<FiltersState>()(
+export const useFiltersStore = create<IFiltersState>()(
   (set) => ({
     tags: [],
     setTags: (tags) => set(() => ({ tags })),

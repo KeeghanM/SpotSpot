@@ -13,11 +13,11 @@ import { Label } from '@/components/ui/label'
 import { DialogClose } from '@radix-ui/react-dialog'
 import { useEffect, useState } from 'react'
 import { useListsQueries } from '../../hooks/useListsQueries'
-import { useListsStore } from '../../stores/lists'
+import { useAppStore } from '../../stores/app'
 
 export default function NewList() {
+  const { currentList } = useAppStore()
   const { createListMutation } = useListsQueries()
-  const { currentList } = useListsStore()
   const [open, setOpen] = useState(false)
   const [name, setName] = useState('')
 
@@ -53,7 +53,7 @@ export default function NewList() {
             <DialogTitle>New List</DialogTitle>
             <DialogDescription className="text-foreground">
               Create a new list of Spots. Click create when
-              you're ready.
+              you&apos;re ready.
             </DialogDescription>
           </DialogHeader>
           <div className="grid gap-4 py-4">

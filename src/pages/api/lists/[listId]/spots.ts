@@ -1,4 +1,4 @@
-import type { Spot } from '@/components/app/stores/lists'
+import type { TSpot } from '@/components/app/stores/app'
 import { auth } from '@/lib/auth/auth'
 import { db } from '@/lib/db/db'
 import { list, spot, spotTag, tag } from '@/lib/db/schema'
@@ -21,7 +21,7 @@ export const POST: APIRoute = async ({
       return new Response('Missing listId', { status: 400 })
 
     const { newSpot } = (await request.json()) as {
-      newSpot: Spot
+      newSpot: TSpot
     }
 
     if (
@@ -72,7 +72,7 @@ export const PUT: APIRoute = async ({
       return new Response('Missing listId', { status: 400 })
 
     const { spotToUpdate } = (await request.json()) as {
-      spotToUpdate: Spot
+      spotToUpdate: TSpot
     }
 
     if (

@@ -1,19 +1,20 @@
 import { useMapsLibrary } from '@vis.gl/react-google-maps'
 import { Input } from '@/components/ui/input'
 import { useEffect, useRef, useState } from 'react'
-import type { Location } from '@/components/app/stores/lists'
+import type { TLocation } from '../../stores/app'
 
-interface LocationProps {
-  location: Location
-  setLocation: (location: Location) => void
+interface ILocationProps {
+  location: TLocation
+  setLocation: (location: TLocation) => void
   className?: string
 }
+
 export default function LocationInput({
   location,
   setLocation,
   className,
-}: LocationProps) {
-  const [placeAutocomplete, setPlaceAutocomplete] =
+}: ILocationProps) {
+  const [_placeAutocomplete, setPlaceAutocomplete] =
     useState<google.maps.places.Autocomplete | null>(null)
   const inputRef = useRef<HTMLInputElement>(null)
   const places = useMapsLibrary('places')

@@ -1,10 +1,8 @@
 import { Skeleton } from '@/components/ui/skeleton'
 import { useListsQueries } from '../../hooks/useListsQueries'
-import { useListsStore } from '../../stores/lists'
 import List from './list'
 
 export default function ListViewer() {
-  const { lists } = useListsStore()
   const { listsQuery } = useListsQueries()
 
   return (
@@ -19,13 +17,13 @@ export default function ListViewer() {
           ))
         ) : (
           <>
-            {lists.map((list) => (
+            {listsQuery.data?.map((list) => (
               <List
                 list={list}
                 key={'list-' + list.id}
               />
             ))}
-            {lists.length === 0 && (
+            {listsQuery.data?.length === 0 && (
               <div className="grid h-full w-full items-center">
                 <p className="mx-auto w-fit">
                   No lists found. Create your first list!

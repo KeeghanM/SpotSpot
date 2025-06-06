@@ -8,20 +8,21 @@ import {
   DialogTrigger,
 } from '@/components/ui/dialog'
 
-import type { Spot } from '../../stores/lists'
-import { useEffect, useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import { Button } from '@/components/ui/button'
 import { useListsQueries } from '../../hooks/useListsQueries'
 import Editor from './editor'
+import type { TSpot } from '../../stores/app'
 
-interface SpotProps {
-  spot: Spot
+interface ISpotProps {
+  spot: TSpot
   children: React.ReactNode
 }
+
 export default function Spot({
   spot,
   children,
-}: SpotProps) {
+}: ISpotProps) {
   const { updateSpotMutation, deleteSpotMutation } =
     useListsQueries()
   const [confirmDelete, setConfirmDelete] = useState(false)
@@ -43,7 +44,7 @@ export default function Spot({
   const [notes, setNotes] = useState(spot.notes ?? '')
   const [tags, setTags] = useState(spot.tags ?? [])
 
-  const handleDeleteSpot = (e: React.MouseEvent) => {
+  const handleDeleteSpot = () => {
     if (confirmDelete) {
       deleteSpotMutation.mutate(spot)
       setConfirmDelete(false)
