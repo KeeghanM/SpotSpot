@@ -1,0 +1,1 @@
+# SpotSpot OpenSource Development Documentation
