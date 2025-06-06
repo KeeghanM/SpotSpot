@@ -13,11 +13,11 @@ import { Label } from '@/components/ui/label'
 import { DialogClose } from '@radix-ui/react-dialog'
 import { useEffect, useState } from 'react'
 import { useListsQueries } from '../../hooks/useListsQueries'
-import { useListsStore } from '../../stores/lists'
+import { useAppStore } from '../../stores/app'
 
 export default function NewList() {
+  const { currentList } = useAppStore()
   const { createSpotMutation } = useListsQueries()
-  const { currentList } = useListsStore()
   const [open, setOpen] = useState(false)
   const [name, setName] = useState('')
 
@@ -90,9 +90,7 @@ export default function NewList() {
             onClick={() => {
               createSpotMutation.mutate({
                 name: name,
-                locationName: '',
-                locationAddress: '',
-                locationLink: '',
+                location: null,
                 listId: currentList!.id,
                 notes: '',
                 rating: 0,

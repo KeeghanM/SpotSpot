@@ -1,4 +1,4 @@
-import type { ListWithSpots } from '@/components/app/stores/lists'
+import type { ListWithSpots } from '@/components/app/stores/app'
 import { clsx, type ClassValue } from 'clsx'
 import { twMerge } from 'tailwind-merge'
 

@@ -6,7 +6,7 @@ import Rating from './rating'
 import { Textarea } from '@/components/ui/textarea'
 import Tags from './tags'
 import type { Tag } from '@/components/app/stores/filters'
-import type { Location } from '@/components/app/stores/lists'
+import type { Location } from '../../stores/app'
 
 interface EditorProps {
   name: string

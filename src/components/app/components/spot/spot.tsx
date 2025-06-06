@@ -8,11 +8,11 @@ import {
   DialogTrigger,
 } from '@/components/ui/dialog'
 
-import type { Spot } from '../../stores/lists'
 import { useEffect, useState } from 'react'
 import { Button } from '@/components/ui/button'
 import { useListsQueries } from '../../hooks/useListsQueries'
 import Editor from './editor'
+import type { Spot } from '../../stores/app'
 
 interface SpotProps {
   spot: Spot

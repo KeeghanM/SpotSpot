@@ -1,4 +1,4 @@
-import type { Spot } from '@/components/app/stores/lists'
+import type { Spot } from '@/components/app/stores/app'
 import { auth } from '@/lib/auth/auth'
 import { db } from '@/lib/db/db'
 import { list, spot, spotTag, tag } from '@/lib/db/schema'

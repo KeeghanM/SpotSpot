@@ -1,7 +1,7 @@
 import { useMapsLibrary } from '@vis.gl/react-google-maps'
 import { Input } from '@/components/ui/input'
 import { useEffect, useRef, useState } from 'react'
-import type { Location } from '@/components/app/stores/lists'
+import type { Location } from '../../stores/app'
 
 interface LocationProps {
   location: Location

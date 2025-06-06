@@ -1,9 +1,9 @@
-import type { Spot } from '@/components/app/stores/lists'
 import {
   IoCheckmarkDoneCircle,
   IoOpenOutline,
 } from 'react-icons/io5'
 import Rating from '../spot/rating'
+import type { Spot } from '../../stores/app'
 
 interface SpotListItemProps {
   spot: Spot

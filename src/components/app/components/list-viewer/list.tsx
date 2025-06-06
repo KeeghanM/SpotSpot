@@ -2,18 +2,18 @@ import { Button } from '@/components/ui/button'
 import { useState } from 'react'
 import { useListsQueries } from '../../hooks/useListsQueries'
 import { useFiltersStore } from '../../stores/filters'
-import {
-  useListsStore,
-  type ListWithSpots,
-} from '../../stores/lists'
 import Spot from '../spot'
 import SpotListItem from './spot-list-item'
+import {
+  useAppStore,
+  type ListWithSpots,
+} from '../../stores/app'
 
 interface ListProps {
   list: ListWithSpots
 }
 export default function List({ list }: ListProps) {
-  const { currentList, selectList } = useListsStore()
+  const { currentList, setCurrentList } = useAppStore()
   const { selectedTags, showVisited } = useFiltersStore()
   const { deleteListMutation } = useListsQueries()
   const [confirmDelete, setConfirmDelete] = useState(false)
@@ -34,7 +34,7 @@ export default function List({ list }: ListProps) {
         className={`flex cursor-pointer justify-between rounded-2xl border p-4 hover:bg-orange-100 ${currentList?.id === list.id ? 'bg-orange-100' : ''}`}
         onClick={() => {
           setConfirmDelete(false)
-          selectList(
+          setCurrentList(
             currentList?.id === list.id ? null : list,
           )
         }}

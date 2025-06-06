@@ -3,33 +3,36 @@ import {
   Map,
   Pin,
 } from '@vis.gl/react-google-maps'
-import { useListsStore } from '../../stores/lists'
 import { useEffect, useState } from 'react'
 import { calculateCenter } from '@/lib/utils'
 import { useFiltersStore } from '../../stores/filters'
 import Spot from '../spot'
+import { useAppStore } from '../../stores/app'
+import { useListsQueries } from '../../hooks/useListsQueries'
 
 export default function MapViewer() {
-  const { lists, currentList } = useListsStore()
+  const { currentList } = useAppStore()
   const { showVisited, selectedTags } = useFiltersStore()
+  const { listsQuery } = useListsQueries()
   const [center, setCenter] = useState(
-    calculateCenter(lists),
+    calculateCenter(listsQuery.data ?? []),
   )
 
   useEffect(() => {
-    navigator.geolocation.getCurrentPosition(
-      (position) => {
-        const currentLocation = {
-          lat: position.coords.latitude,
-          lng: position.coords.longitude,
-        }
-        setCenter(currentLocation)
-      },
-      () => {
-        setCenter(calculateCenter(lists))
-      },
-    )
-  }, [lists])
+    if (!listsQuery.data)
+      navigator.geolocation.getCurrentPosition(
+        (position) => {
+          const currentLocation = {
+            lat: position.coords.latitude,
+            lng: position.coords.longitude,
+          }
+          setCenter(currentLocation)
+        },
+        () => {
+          setCenter(calculateCenter(listsQuery.data ?? []))
+        },
+      )
+  }, [listsQuery.data])
 
   return (
     <Map
@@ -43,8 +46,8 @@ export default function MapViewer() {
       colorScheme="FOLLOW_SYSTEM"
       renderingType="RASTER"
     >
-      {lists
-        .filter((list) =>
+      {listsQuery.data
+        ?.filter((list) =>
           currentList ? list.id === currentList.id : true,
         )
         .map((list) => {

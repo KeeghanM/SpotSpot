@@ -1,20 +1,12 @@
-import { authClient } from '@/lib/auth/client-react'
 import {
   useMutation,
   useQuery,
   useQueryClient,
 } from '@tanstack/react-query'
 import { usePostHog } from 'posthog-js/react'
-import { useEffect } from 'react'
-import {
-  useFiltersStore,
-  type Tag,
-} from '../stores/filters'
-import {
-  useListsStore,
-  type ListWithSpots,
-  type Spot,
-} from '../stores/lists'
+
+import type { Tag } from '../stores/filters'
+import type { ListWithSpots, Spot } from '../stores/app'
 
 const fetchLists = async (): Promise<ListWithSpots[]> => {
   const response = await fetch('/api/lists')
@@ -26,16 +18,7 @@ const fetchTags = async (): Promise<Tag[]> => {
 }
 export function useListsQueries() {
   const posthog = usePostHog()
-  const { data: userData } = authClient.useSession()
   const queryClient = useQueryClient()
-  const {
-    addList,
-    removeList,
-    addSpot,
-    updateSpot,
-    removeSpot,
-    updateList,
-  } = useListsStore()
 
   // Fetch the data
   const listsQuery = useQuery({
@@ -47,33 +30,12 @@ export function useListsQueries() {
     queryFn: fetchTags,
   })
 
-  // Update Zustand store whenever queries fetch new data
-  useEffect(() => {
-    if (!listsQuery.data) return
-
-    useListsStore.setState({ lists: listsQuery.data })
-  }, [listsQuery.data])
-
-  useEffect(() => {
-    if (!tagsQuery.data) return
-
-    useFiltersStore.setState({ tags: tagsQuery.data })
-  }, [tagsQuery.data])
-
   // Mutations for adding/deleting etc etc
   const createListMutation = useMutation({
     mutationFn: async (newList: {
       name: string
       parentId: number | null
     }) => {
-      // Add it "eagerly" before the re-fetch comes into effect
-      addList({
-        ...newList,
-        id: -1,
-        spots: [],
-        userId: userData!.user.id,
-      })
-
       await fetch('/api/lists', {
         method: 'POST',
         body: JSON.stringify({ newList }),
@@ -91,9 +53,6 @@ export function useListsQueries() {
 
   const updateListMutation = useMutation({
     mutationFn: async (list: ListWithSpots) => {
-      // Add it "eagerly" before the re-fetch comes into effect
-      updateList(list)
-
       await fetch('/api/lists', {
         method: 'PUT',
         body: JSON.stringify({ listToUpdate: list }),
@@ -112,9 +71,6 @@ export function useListsQueries() {
 
   const deleteListMutation = useMutation({
     mutationFn: async (id: number) => {
-      // Remove it "eagerly" before the re-fetch comes into effect
-      removeList(id)
-
       await fetch('/api/lists', {
         method: 'DELETE',
         body: JSON.stringify({ id }),
@@ -130,8 +86,6 @@ export function useListsQueries() {
 
   const createSpotMutation = useMutation({
     mutationFn: async (newSpot: Omit<Spot, 'id'>) => {
-      // Add it "eagerly" before the re-fetch comes into effect
-      addSpot(newSpot.listId, { id: -1, ...newSpot })
       await fetch(`/api/lists/${newSpot.listId}/spots`, {
         method: 'POST',
         body: JSON.stringify({ newSpot }),
@@ -149,8 +103,6 @@ export function useListsQueries() {
 
   const updateSpotMutation = useMutation({
     mutationFn: async (spot: Spot) => {
-      // Update it "eagerly" before the re-fetch comes into effect
-      updateSpot(spot.listId, spot)
       await fetch(`/api/lists/${spot.listId}/spots`, {
         method: 'PUT',
         body: JSON.stringify({ spotToUpdate: spot }),
@@ -169,8 +121,6 @@ export function useListsQueries() {
 
   const deleteSpotMutation = useMutation({
     mutationFn: async (spot: Spot) => {
-      // Remove it "eagerly" before the re-fetch comes into effect
-      removeSpot(spot.listId, spot.id)
       await fetch(`/api/lists/${spot.listId}/spots`, {
         method: 'DELETE',
         body: JSON.stringify({ spotId: spot.id }),
@@ -188,6 +138,7 @@ export function useListsQueries() {
 
   return {
     listsQuery,
+    tagsQuery,
     createListMutation,
     updateListMutation,
     deleteListMutation,
