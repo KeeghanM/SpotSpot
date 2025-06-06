@@ -5,21 +5,10 @@ import { twMerge } from 'tailwind-merge'
 export function cn(...inputs: ClassValue[]) {
   return twMerge(clsx(inputs))
 }
-
 export function calculateCenter(lists: TListWithSpots[]): {
   lat: number
   lng: number
 } {
-  // Try to get the user's current location
-  if (navigator.geolocation) {
-    navigator.geolocation.getCurrentPosition((position) => {
-      return {
-        lat: position.coords.latitude,
-        lng: position.coords.longitude,
-      }
-    })
-  }
-
   // Default return if no valid coordinates exist
   if (lists.length === 0) return { lat: 0, lng: 0 }
 
@@ -32,7 +21,7 @@ export function calculateCenter(lists: TListWithSpots[]): {
   // Process all valid locations
   for (const list of lists) {
     for (const spot of list.spots) {
-      if (spot.location) {
+      if (spot.location?.lat && spot.location?.lng) {
         // Convert lat/lng to radians
         const latRad = (spot.location.lat * Math.PI) / 180
         const lngRad = (spot.location.lng * Math.PI) / 180
@@ -47,8 +36,8 @@ export function calculateCenter(lists: TListWithSpots[]): {
     }
   }
 
-  // If no valid locations were found
-  if (count === 0) return { lat: 0, lng: 0 }
+  // If no valid locations were found, return default fallback
+  if (count === 0) return { lat: 53.8008, lng: -1.5491 }
 
   // Calculate average point in Cartesian space
   x /= count

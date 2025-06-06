@@ -14,25 +14,75 @@ export default function MapViewer() {
   const { currentList } = useAppStore()
   const { showVisited, selectedTags } = useFiltersStore()
   const { listsQuery } = useListsQueries()
-  const [center, setCenter] = useState(
-    calculateCenter(listsQuery.data ?? []),
-  )
+  const [center, setCenter] = useState<{
+    lat: number
+    lng: number
+  } | null>(null)
+  const [isCalculatingCenter, setIsCalculatingCenter] =
+    useState(true)
 
   useEffect(() => {
-    if (!listsQuery.data)
+    const calculateMapCenter = async () => {
+      setIsCalculatingCenter(true)
+
+      try {
+        const userLocation = await getUserLocation()
+        if (userLocation) {
+          setCenter(userLocation)
+          setIsCalculatingCenter(false)
+          return
+        }
+      } catch (error) {
+        console.log('Could not get user location:', error)
+      }
+
+      if (listsQuery.data && listsQuery.data.length > 0) {
+        const calculatedCenter = calculateCenter(
+          listsQuery.data,
+        )
+        setCenter(calculatedCenter)
+      } else {
+        setCenter({ lat: 53.8008, lng: -1.5491 })
+      }
+
+      setIsCalculatingCenter(false)
+    }
+
+    calculateMapCenter()
+  }, [listsQuery.data])
+
+  const getUserLocation = (): Promise<{
+    lat: number
+    lng: number
+  }> => {
+    return new Promise((resolve, reject) => {
+      if (!navigator.geolocation) {
+        reject(new Error('Geolocation not supported'))
+        return
+      }
+
       navigator.geolocation.getCurrentPosition(
         (position) => {
-          const currentLocation = {
+          resolve({
             lat: position.coords.latitude,
             lng: position.coords.longitude,
-          }
-          setCenter(currentLocation)
+          })
         },
-        () => {
-          setCenter(calculateCenter(listsQuery.data ?? []))
+        (error) => {
+          reject(error)
         },
+        { timeout: 5000, enableHighAccuracy: false },
       )
-  }, [listsQuery.data])
+    })
+  }
+
+  if (isCalculatingCenter || !center) {
+    return (
+      <div className="flex h-full w-full animate-pulse items-center justify-center bg-gray-100">
+        <div className="text-gray-500">Loading map...</div>
+      </div>
+    )
+  }
 
   return (
     <Map
