@@ -81,6 +81,7 @@ export function useListsQueries() {
     },
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ['lists'] })
+      queryClient.invalidateQueries({ queryKey: ['tags'] })
     },
   })
 
@@ -97,7 +98,7 @@ export function useListsQueries() {
       })
     },
     onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ['spots'] })
+      queryClient.invalidateQueries({ queryKey: ['lists'] })
     },
   })
 
@@ -114,7 +115,7 @@ export function useListsQueries() {
       })
     },
     onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ['spots'] })
+      queryClient.invalidateQueries({ queryKey: ['lists'] })
       queryClient.invalidateQueries({ queryKey: ['tags'] })
     },
   })
@@ -132,7 +133,8 @@ export function useListsQueries() {
       })
     },
     onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ['spots'] })
+      queryClient.invalidateQueries({ queryKey: ['lists'] })
+      queryClient.invalidateQueries({ queryKey: ['tags'] })
     },
   })
 
