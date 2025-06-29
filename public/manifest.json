@@ -36,6 +36,12 @@
   },
   "dir": "ltr",
   "prefer_related_applications": false,
+  "related_applications": [
+    {
+      "platform": "webapp",
+      "url": "https://www.spotspot.app/manifest.json"
+    }
+  ],
   "lang": "en-US",
   "orientation": "portrait",
   "id": "/app",

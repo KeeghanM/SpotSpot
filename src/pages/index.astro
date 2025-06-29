@@ -3,6 +3,7 @@ export const prerender = true
 import MainLayout from '@/layouts/main-layout.astro'
 import { Button } from '@/components/ui/button'
 import { Icon } from 'astro-icon/components'
+import { DownloadButton } from '@/components/download'
 ---
 
 <MainLayout title="SpotSpot - Track and Discover Places">
@@ -26,14 +27,13 @@ import { Icon } from 'astro-icon/components'
           way.
         </p>
         <div class="mt-10 flex flex-col gap-4 sm:flex-row">
-          <Button size="lg">
-            <a href="/register">Create your account</a>
-          </Button>
+          <DownloadButton client:load />
           <Button
             variant="outline"
             size="lg"
+            aria-label="Learn SpotSpot features"
           >
-            <a href="/login">Sign in</a>
+            <a href="#features">Learn more</a>
           </Button>
         </div>
       </div>
@@ -74,7 +74,10 @@ import { Icon } from 'astro-icon/components'
     </section>
 
     <!-- Features Section -->
-    <section class="mt-24 md:mt-32">
+    <section
+      id="features"
+      class="mt-24 md:mt-32"
+    >
       <h2
         class="mb-2 text-center text-3xl font-extrabold tracking-tight text-orange-600 md:text-4xl"
       >
@@ -221,9 +224,15 @@ import { Icon } from 'astro-icon/components'
         of memories and discoveries - beautiful, simple, and
         just for you.
       </p>
-      <Button size="lg">
-        <a href="/register">Get Started for Free</a>
-      </Button>
+      <div class="mt-4">
+        <DownloadButton client:load />
+      </div>
     </section>
   </div>
 </MainLayout>
+
+<style is:global>
+  * {
+    scroll-behavior: smooth;
+  }
+</style>
