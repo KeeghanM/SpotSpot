@@ -1,30 +1,56 @@
 import { Button } from '@/components/ui/button'
 import { useEffect, useState } from 'react'
 
+// Type definitions for PWA APIs
+interface RelatedApp {
+  platform: string
+  url?: string
+  id?: string
+}
+
+interface BeforeInstallPromptEvent extends Event {
+  prompt(): Promise<void>
+  userChoice: Promise<{ outcome: 'accepted' | 'dismissed' }>
+}
+
+declare global {
+  interface Navigator {
+    getInstalledRelatedApps(): Promise<RelatedApp[]>
+  }
+
+  interface WindowEventMap {
+    beforeinstallprompt: BeforeInstallPromptEvent
+  }
+}
+
 export function DownloadButton() {
-  const [deferredPrompt, setDeferredPrompt] = useState(null)
+  const [deferredPrompt, setDeferredPrompt] =
+    useState<BeforeInstallPromptEvent | null>(null)
   const [isInstallable, setIsInstallable] = useState(false)
   const [isAlreadyInstalled, setIsAlreadyInstalled] =
     useState(false)
 
   useEffect(() => {
     async function checkInstall() {
-      const relatedApps =
-        await navigator.getInstalledRelatedApps()
-      if (relatedApps.length >= 0)
-        setIsAlreadyInstalled(false)
+      // Check if the API is available before using it
+      if ('getInstalledRelatedApps' in navigator) {
+        const relatedApps =
+          await navigator.getInstalledRelatedApps()
+        if (relatedApps.length >= 0)
+          setIsAlreadyInstalled(false)
+      }
     }
     checkInstall()
 
-    function handleBeforeInstallPrompt(event) {
+    function handleBeforeInstallPrompt(
+      event: BeforeInstallPromptEvent,
+    ) {
       event.preventDefault() // Prevent automatic prompt
       setDeferredPrompt(event) // Store the event
       setIsInstallable(true) // Show the install button
-      console.log('PWA install prompt fired')
     }
 
     function handleAppInstalled() {
-      console.log('PWA installed')
       setIsInstallable(false) // Hide the install button
     }
 
@@ -51,22 +77,15 @@ export function DownloadButton() {
     }
   }, [])
 
-  // Function to handle installation
   const installApp = async () => {
     if (!deferredPrompt) return
 
-    deferredPrompt.prompt() // Show the prompt
+    deferredPrompt.prompt()
 
     const choiceResult = await deferredPrompt.userChoice
     if (choiceResult.outcome === 'accepted') {
-      console.log('User accepted the PWA installation')
-    } else {
-      console.log('User dismissed the PWA installation')
+      window.location.href = '/app'
     }
-
-    // Reset after interaction
-    setDeferredPrompt(null)
-    setIsInstallable(false)
   }
   if (!isInstallable) {
     return (
