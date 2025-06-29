@@ -2,11 +2,11 @@ import { Label } from '@/components/ui/label'
 import { Switch } from '@/components/ui/switch'
 import { authClient } from '@/lib/auth/client-react'
 import { usePostHog } from 'posthog-js/react'
+import Select from 'react-select'
+import { useListsQueries } from '../../hooks/useListsQueries'
 import { useAppStore } from '../../stores/app'
 import { useFiltersStore } from '../../stores/filters'
 import { selectStyles } from './select-styles'
-import { useListsQueries } from '../../hooks/useListsQueries'
-import Select from 'react-select'
 
 export interface IOptionType {
   value: string | number
@@ -22,14 +22,13 @@ export default function Filters({
   const { mode, currentList, setCurrentList } =
     useAppStore()
   const {
-    tags,
     setSelectedTags,
     showVisited,
     setShowVisited,
     selectedTags,
   } = useFiltersStore()
   const { data: userData } = authClient.useSession()
-  const { listsQuery } = useListsQueries()
+  const { listsQuery, tagsQuery } = useListsQueries()
 
   const trackFilter = () =>
     posthog?.capture('filters_applied', {
@@ -88,7 +87,7 @@ export default function Filters({
         )}
         <Select
           menuPlacement="top"
-          options={tags.map((tag) => ({
+          options={tagsQuery.data?.map((tag) => ({
             label: tag.name,
             value: tag.id,
           }))}
