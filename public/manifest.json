@@ -28,6 +28,13 @@
       "src": "/icons/icon-1024x1024.png"
     }
   ],
+  "display_override": ["window-controls-overlay"],
+  "edge_side_panel": { "preferred_width": 500 },
+  "handle_links": "preferred",
+  "launch_handler": {
+    "client_mode": ["navigate-existing", "auto"]
+  },
+  "lang": "en-US",
   "orientation": "portrait",
   "id": "/app",
   "start_url": "/app",
