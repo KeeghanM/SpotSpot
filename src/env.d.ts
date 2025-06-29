@@ -9,6 +9,7 @@ interface ImportMetaEnv {
   readonly TURSO_AUTH_TOKEN: string
   readonly PUBLIC_GOOGLE_PLACES_API_KEY: string
   readonly PUBLIC_POSTHOG_KEY: string
+  readonly RESEND_API_KEY: string
   // Add Astro's built-in environment variables
   readonly DEV: boolean
   readonly PROD: boolean
