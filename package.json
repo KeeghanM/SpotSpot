@@ -12,7 +12,7 @@
     "@astrojs/node": "9.2.2",
     "@astrojs/partytown": "^2.1.4",
     "@astrojs/react": "4.3.0",
-    "@iconify-json/lucide": "^1.2.53",
+    "@iconify-json/lucide": "^1.2.57",
     "@libsql/client": "^0.15.9",
     "@radix-ui/react-dialog": "^1.1.6",
     "@radix-ui/react-label": "^2.1.2",
