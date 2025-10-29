@@ -8,11 +8,11 @@ import {
   DialogTrigger,
 } from '@/components/ui/dialog'
 
-import React, { useEffect, useState } from 'react'
 import { Button } from '@/components/ui/button'
+import React, { useEffect, useState } from 'react'
 import { useListsQueries } from '../../hooks/useListsQueries'
-import Editor from './editor'
 import type { TSpot } from '../../stores/app'
+import Editor from './editor'
 
 interface ISpotProps {
   spot: TSpot
@@ -112,7 +112,7 @@ export default function Spot({
               deleteSpotMutation.isPending
             }
             onClick={handleDeleteSpot}
-            className="mr-auto"
+            className="md:mr-auto"
           >
             {confirmDelete ? 'Are you sure?' : 'Delete'}
           </Button>
