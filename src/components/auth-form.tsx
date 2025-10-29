@@ -74,7 +74,7 @@ export function AuthForm({ type, token }: AuthFormProps) {
     const { error } = await authClient.signIn.email({
       email,
       password,
-      callbackURL: '/dashboard',
+      callbackURL: '/app',
     })
 
     if (error?.message) {
@@ -87,7 +87,7 @@ export function AuthForm({ type, token }: AuthFormProps) {
       name,
       email,
       password,
-      callbackURL: '/dashboard',
+      callbackURL: '/app',
     })
 
     if (error?.message) {

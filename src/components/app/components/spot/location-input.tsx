@@ -1,5 +1,5 @@
-import { useMapsLibrary } from '@vis.gl/react-google-maps'
 import { Input } from '@/components/ui/input'
+import { useMapsLibrary } from '@vis.gl/react-google-maps'
 import { useEffect, useRef, useState } from 'react'
 import type { TLocation } from '../../stores/app'
 
@@ -14,11 +14,10 @@ export default function LocationInput({
   setLocation,
   className,
 }: ILocationProps) {
-  const [_placeAutocomplete, setPlaceAutocomplete] =
+  const [placeAutocomplete, setPlaceAutocomplete] =
     useState<google.maps.places.Autocomplete | null>(null)
   const inputRef = useRef<HTMLInputElement>(null)
   const places = useMapsLibrary('places')
-  const observerRef = useRef<MutationObserver | null>(null)
 
   const addressToURL = (address: string) => {
     if (!address) return ''
@@ -31,105 +30,30 @@ export default function LocationInput({
 
   useEffect(() => {
     if (!places || !inputRef.current) return
-    const options = {
-      fields: [
-        'geometry',
-        'name',
-        'formatted_address',
-        'url',
-      ],
-    }
-    const autocomplete = new places.Autocomplete(
-      inputRef.current,
-      options,
+
+    setPlaceAutocomplete(
+      new places.Autocomplete(inputRef.current, {
+        fields: ['formatted_address', 'name', 'geometry'],
+      }),
     )
-    setPlaceAutocomplete(autocomplete)
-
-    const listener = autocomplete.addListener(
-      'place_changed',
-      () => {
-        const place = autocomplete.getPlace()
-        if (!place) return
-
-        setLocation({
-          name: place.name || '',
-          address: place.formatted_address || '',
-          link: addressToURL(place.formatted_address || ''),
-          lat: place.geometry?.location?.lat() || 0,
-          lng: place.geometry?.location?.lng() || 0,
-        })
-      },
-    )
-
-    return () => {
-      if (listener)
-        google.maps.event.removeListener(listener)
-      if (autocomplete) autocomplete.unbindAll()
-    }
   }, [places])
 
   useEffect(() => {
-    if (observerRef.current) {
-      observerRef.current.disconnect()
-    }
+    if (!placeAutocomplete) return
 
-    const observer = new MutationObserver((mutations) => {
-      for (const mutation of mutations) {
-        if (
-          mutation.type === 'childList' &&
-          mutation.addedNodes.length > 0
-        ) {
-          const pacContainer = document.querySelector(
-            '.pac-container',
-          )
-          if (pacContainer) {
-            const stopPropagation = (e: Event) => {
-              e.stopPropagation()
-            }
+    placeAutocomplete.addListener('place_changed', () => {
+      const place = placeAutocomplete.getPlace()
+      if (!place) return
 
-            pacContainer.addEventListener(
-              'mousedown',
-              stopPropagation,
-              true,
-            )
-            pacContainer.addEventListener(
-              'pointerdown',
-              stopPropagation,
-              true,
-            )
-
-            pacContainer
-              .querySelectorAll('.pac-item')
-              .forEach((item) => {
-                item.addEventListener(
-                  'mousedown',
-                  stopPropagation,
-                  true,
-                )
-                item.addEventListener(
-                  'pointerdown',
-                  stopPropagation,
-                  true,
-                )
-              })
-
-            observer.disconnect()
-          }
-        }
-      }
+      setLocation({
+        name: place.name || '',
+        address: place.formatted_address || '',
+        link: addressToURL(place.formatted_address || ''),
+        lat: place.geometry?.location?.lat() || 0,
+        lng: place.geometry?.location?.lng() || 0,
+      })
     })
-
-    observer.observe(document.body, {
-      childList: true,
-      subtree: true,
-    })
-
-    observerRef.current = observer
-
-    return () => {
-      observer.disconnect()
-    }
-  }, [])
+  }, [placeAutocomplete])
 
   return (
     <Input
